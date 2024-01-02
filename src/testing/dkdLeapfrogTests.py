@@ -54,3 +54,9 @@ def testEarthMoonSun():
     plt.title("Moon's Trajectory With Respect to Earth")
     plt.show()
 
+def testEarthJupiterSun():
+    earthCond = [147.095 * (10.0 ** 9.0), 0.0, 0.0, 0.0, 30.29 * 1000, 0.0, 5.9724 * (10.0 ** 24.0), 1000]
+    jupiterCond = [740.595 * (10.0 ** 9.0), 0.0, 0.0, 0.0, 13.72 * 1000, 0.0, 1898.13 * (10.0 ** 24.0), 1000]
+    sunCond = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1988500.0 * (10.0 ** 24.0), 0.0]
+    initialCondition = np.asarray([earthCond, jupiterCond, sunCond])
+    tf.testInitialConditionQualitatively(initialCondition, 1000000, 311536000.0)

@@ -1,7 +1,7 @@
 import dkdLeapfrogTests
 
 def main():
-    dkdLeapfrogTests.testEarthMoonSun()
+    dkdLeapfrogTests.testEarthJupiterSun()
 
 if __name__=='__main__':
     main()
