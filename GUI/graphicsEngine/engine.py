@@ -6,7 +6,7 @@ from .models import *
 from .camera import *
 
 class graphicsEngine:
-    def __init__(self, winSize=(1600,900)):
+    def __init__(self,graphicsSettings, winSize=(1600,900)):
         pg.init()
         self.winSize=winSize
 
@@ -19,12 +19,15 @@ class graphicsEngine:
         pg.display.set_mode(self.winSize,flags=pg.OPENGL | pg.DOUBLEBUF)
 
         self.ctx=mgl.create_context()
+        #self.ctx.front_face='cw'
+        #self.ctx.enable(flags=mgl.DEPTH_TEST) #| mgl.CULL_FACE)
 
         self.clock=pg.time.Clock()
 
 
-        cameraParams=[[0,1,-3],glm.vec3(0), [0.0,1.0,.5]]
-        self.camera=camera([50,0,10],cameraParams, self.winSize)
+        cameraParams=graphicsSettings["cameraFrustumParams"]
+        speedParams=[graphicsSettings["cameraSpeed"], graphicsSettings["cameraSensitivity"]]
+        self.camera=camera([50,0,100],cameraParams, self.winSize, speedParams)
         #scene
         self.scene=sphere(1.0,[0.0,0.0,0.0],"Sphere1",self)
 
