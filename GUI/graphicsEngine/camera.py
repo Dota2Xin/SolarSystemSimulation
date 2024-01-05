@@ -31,7 +31,7 @@ class camera:
         self.right = glm.vec3(1, 0, 0)
 
         self.projMatrix=glm.perspective(glm.radians(frustumParams[0]),self.aspectRatio,frustumParams[1],frustumParams[2])
-        self.viewMatrix=glm.lookAt(self.position,self.center,self.up)
+        self.viewMatrix=glm.lookAt(self.position,self.position+self.forward,self.up)
         self.speed=speedParams[0]
         self.sensitivity=speedParams[1]
 
@@ -63,6 +63,7 @@ class camera:
         self.forward.z=glm.sin(yaw)*glm.cos(pitch)
         self.forward.y=glm.sin(pitch)
 
+        self.forward=glm.normalize(self.forward)
         self.right=glm.normalize(glm.cross(self.forward,glm.vec3(0,1,0)))
         self.up=glm.normalize(glm.cross(self.right,self.forward))
 

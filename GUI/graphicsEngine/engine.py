@@ -6,7 +6,7 @@ from .models import *
 from .camera import *
 
 class graphicsEngine:
-    def __init__(self,graphicsSettings, winSize=(1600,900)):
+    def __init__(self,graphicsSettings,names, currentState, winSize=(1600,900)):
         pg.init()
         self.winSize=winSize
 
@@ -27,15 +27,27 @@ class graphicsEngine:
 
         cameraParams=graphicsSettings["cameraFrustumParams"]
         speedParams=[graphicsSettings["cameraSpeed"], graphicsSettings["cameraSensitivity"]]
-        self.camera=camera([50,0,100],cameraParams, self.winSize, speedParams)
+        self.camera=camera([50,.1,1000],cameraParams, self.winSize, speedParams)
         #scene
-        self.scene=sphere(1.0,[0.0,0.0,0.0],"Sphere1",self)
+        self.scene={}
+        self.createScene(names,currentState)
 
-    def updatePosition(self, position):
-        self.scene.update(position)
+    def createScene(self,names, currentState):
+        for name in names:
+            self.scene[name]=sphere(currentState[names[name]][-1],currentState[names[name]][0:3],self)
+
+    def updatePositions(self, positionNames, positionVals):
+        for obj in positionNames:
+            self.scene[obj].update(positionVals[positionNames[obj]][0:3])
+
+    def addRegularPlanet(self, position, radius, name):
+        self.scene[name]=sphere(radius, position, self)
 
     def render(self):
         #clears the framebuffer and then swaps buffers
         self.ctx.clear(color=(.08,.16,.18))
-        self.scene.render()
+        for obj in self.scene:
+            self.scene[obj].render()
+            if len(self.scene)>1:
+                print("")
         pg.display.flip()

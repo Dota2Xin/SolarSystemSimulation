@@ -14,10 +14,9 @@ class sphere:
     Name- String corresponding to name of sphere
     context- Passes the context we're currently working with
     '''
-    def __init__(self, radius, position, name, engine):
+    def __init__(self, radius, position, engine):
         self.radius=radius
         self.position=position
-        self.name=name
         self.ctx=engine.ctx
         self.engine=engine
         self.vbo=self.getVertexBuffer()
@@ -38,6 +37,7 @@ class sphere:
 
 
     def update(self, position):
+        self.position=position
         self.modelMatrix= glm.mat4(1,0,0,0, 0,1,0,0, 0,0,1,0, position[0],position[1],position[2],1)
         self.shaderProgram['m_model'].write(self.modelMatrix)
         self.shaderProgram['m_proj'].write(self.engine.camera.projMatrix)
