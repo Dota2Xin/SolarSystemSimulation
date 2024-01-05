@@ -12,7 +12,7 @@ import controlEntities
 def main():
     #Initialize this to solar system
     #describes the current state numerically
-    currentState=[[0.0,0.0,0.0,0.0,0.0,0.0,1000,1.0],[0.0,1.0,0.0,0.0,0.0,0.0,1000,1.0], [0.0,-1.0,0.0,0.0,0.0,0.0,1000,1.0]]
+    currentState=np.asarray([[-1.0,0.0,0.0,.0000913393398,.0001582044,0.0,1000,.5],[1.0,0.0,0.0,.0000913393398,-.0001582044,0.0,1000,.5], [0.0,-1.732,0.0,-.00018267868,0.0,0.0,1000,.5]])
     names = {"Sphere1": 0, "Sphere2":1, "Sphere3":2}
     #Dictionary that contains the full state of the solar system, references to physical data, as well as graphics data
     mathematicalPositions=[]
@@ -25,12 +25,8 @@ def main():
     pg.mouse.set_visible(False)
     run=True
     objCount=len(currentState)
-    count=0
     while run:
-        count+=1
-        if count==300:
-            print("LOLS)")
-        currentTime=pg.time.get_ticks()*.001
+        currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime))
         engine.updatePositions(names,currentState)
         engine.render()
         engine.camera.update(deltaTime)
@@ -42,7 +38,7 @@ def main():
                 if event.key==pg.K_i:
                     currentPos=engine.camera.position+engine.camera.forward
                     objCount = objCount+1
-                    controlEntities.addObject(f"Sphere{objCount}", [currentPos[0], currentPos[1], currentPos[2], 0.0,0.0,0.0,1000,1.0], engine, currentState, names)
+                    currentState=controlEntities.addObject(f"Sphere{objCount}", [currentPos[0], currentPos[1], currentPos[2], 0.0,0.0,0.0,1000,1.0], engine, currentState, names)
 
     engine.destroy()
     pg.quit()

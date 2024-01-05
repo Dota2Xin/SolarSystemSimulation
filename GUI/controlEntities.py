@@ -5,8 +5,11 @@ import numpy as np
 import glm
 
 def addObject(name, initialState, engine, currentState, names):
-    currentState.append(initialState)
-    names[name]=len(currentState)-1
+    print(initialState)
+    newState=np.concatenate((currentState,np.asarray([initialState])),axis=0)
+    print(newState)
+    names[name]=len(newState)-1
     engine.addRegularPlanet(initialState[0:3], initialState[-1], name)
+    return np.asarray(newState)
 
 

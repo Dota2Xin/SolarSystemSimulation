@@ -51,3 +51,7 @@ class graphicsEngine:
             if len(self.scene)>1:
                 print("")
         pg.display.flip()
+
+    def destroy(self):
+        for obj in self.scene:
+            self.scene[obj].destroy()
