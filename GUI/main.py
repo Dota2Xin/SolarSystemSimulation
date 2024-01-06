@@ -10,6 +10,9 @@ import controlEntities
 
 
 def main():
+    #Params
+    timeScale=1.0 #describes the correspondence between real time and sim time
+
     #Initialize this to solar system
     #describes the current state numerically
     currentState=np.asarray([[-1.0,0.0,0.0,.0000913393398,.0001582044,0.0,1000,.5],[1.0,0.0,0.0,.0000913393398,-.0001582044,0.0,1000,.5], [0.0,-1.732,0.0,-.00018267868,0.0,0.0,1000,.5]])
@@ -26,7 +29,7 @@ def main():
     run=True
     objCount=len(currentState)
     while run:
-        currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime))
+        currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime*timeScale))
         engine.updatePositions(names,currentState)
         engine.render()
         engine.camera.update(deltaTime)
