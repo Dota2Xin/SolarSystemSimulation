@@ -10,11 +10,27 @@ def getSolarSystemData():
 
     #loads list of important astronomical objects, mass and radius are hardcoded in
     objectList=np.loadtxt("importantBodies.txt", dtype='str')
+    stateArray=[]
+    names={}
+    count=0
     for object in objectList:
-        getObjectData(object[1])
+        currentObject=np.asarray(getObjectData(object[1])+[float(object[3])/(10**27)]+[float(object[4])/10000000])
+        stateArray.append(currentObject)
+        names[object[0]]=count
+        count+=1
+    stateArray=np.asarray(stateArray)
+    return stateArray, names
 
-    #pass the actual request
-    #getObjectData(command)
+
+def getVar(dataText, type):
+    index = dataText.find(f"{type}=")
+    tempData = dataText[index + 3:index + 102].split(' ')
+    numIndex = 0
+    if tempData[0] == "":
+        numIndex = 1
+    pos = float(tempData[numIndex])
+    return pos
+
 
 def getObjectData(command):
     #info on command format at this link:https://ssd-api.jpl.nasa.gov/doc/horizons.html
@@ -31,6 +47,7 @@ def getObjectData(command):
     stepSize='1d'
 
     data=requests.get(f"https://ssd.jpl.nasa.gov/api/horizons.api?format={dataFormat}&COMMAND={command}&OBJ_DATA={objectData}&MAKE_EPHEM={ephemData}&EPHEM_TYPE={dataType}&CENTER={coordinateCenter}&START_TIME={startTime}&STOP_TIME={finalTime}&STEP_SIZE={stepSize}")
-    print(data.text)
-    #TODO= Get position data from the data by finding the string and doing substrings and string.split(' '), mass and radius are already hardcoded in
-
+    dataText=data.text
+    position=(getVar(dataText,"X "), getVar(dataText,"Y "), getVar(dataText, "Z "))
+    velocity=(getVar(dataText, "VX"), getVar(dataText, "VY"), getVar(dataText, "VZ"))
+    return [position[0]/1000000,position[1]/1000000,position[2]/1000000, velocity[0]/1000000, velocity[1]/1000000, velocity[2]/1000000]

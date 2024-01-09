@@ -1,4 +1,5 @@
-import solarSystemData
+from GUI import solarSystemData
+
 
 #used to run any files in the GUI folder for testing
 

@@ -68,8 +68,13 @@ class camera:
         self.up=glm.normalize(glm.cross(self.right,self.forward))
 
     def move(self, dt):
+        keys = pg.key.get_pressed()
+        speedChange=False
+        if keys[pg.K_r]:
+            self.speed=10*self.speed
+            speedChange=True
         deltaX=dt*self.speed
-        keys=pg.key.get_pressed()
+
         if keys[pg.K_w]:
             self.position += self.forward*deltaX #-= cause z is reversed in openGL
             #self.center[2] -=deltaX
@@ -88,6 +93,7 @@ class camera:
         if keys[pg.K_LSHIFT]:
             self.position -=self.up*deltaX
             #self.center[1]-=deltaX
-
+        if speedChange:
+            self.speed=self.speed/10
 
 

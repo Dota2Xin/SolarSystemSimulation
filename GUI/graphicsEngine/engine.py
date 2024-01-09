@@ -6,7 +6,7 @@ from .models import *
 from .camera import *
 
 class graphicsEngine:
-    def __init__(self,graphicsSettings,names, currentState, winSize=(1600,900)):
+    def __init__(self,graphicsSettings,names, currentState, winSize=(1300,700)):
         pg.init()
         self.winSize=winSize
 
@@ -27,7 +27,7 @@ class graphicsEngine:
 
         cameraParams=graphicsSettings["cameraFrustumParams"]
         speedParams=[graphicsSettings["cameraSpeed"], graphicsSettings["cameraSensitivity"]]
-        self.camera=camera([50,.1,1000],cameraParams, self.winSize, speedParams)
+        self.camera=camera([50,.1,10000],cameraParams, self.winSize, speedParams)
         #scene
         self.scene={}
         self.createScene(names,currentState)
@@ -48,8 +48,6 @@ class graphicsEngine:
         self.ctx.clear(color=(.08,.16,.18))
         for obj in self.scene:
             self.scene[obj].render()
-            if len(self.scene)>1:
-                print("")
         pg.display.flip()
 
     def destroy(self):
