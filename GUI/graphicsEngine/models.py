@@ -4,6 +4,8 @@ import pygame as pg
 import glm
 import os
 
+#textures are from https://www.solarsystemscope.com/textures/
+
 class sphere:
     '''
     Class for masking a sphere using modernGL
@@ -14,7 +16,7 @@ class sphere:
     Name- String corresponding to name of sphere
     context- Passes the context we're currently working with
     '''
-    def __init__(self, radius, position, engine):
+    def __init__(self, radius, position, engine,textureUnit=0, textureName="earth"):
         self.radius=radius
         self.position=position
         self.ctx=engine.ctx
@@ -23,13 +25,13 @@ class sphere:
         self.shaderProgram=self.getShaderProgram('sphereBasic')
         self.vao=self.getVertexArrayObject()
         self.modelMatrix=glm.mat4(1,0,0,0, 0,1,0,0, 0,0,1,0, position[0],position[1],position[2],1)
-        self.texture=self.getTexture("earth1")
-        self.onInit()
+        self.texture=self.getTexture(textureName)
+        self.onInit(textureUnit)
 
-    def onInit(self):
+    def onInit(self, textureUnit):
         #texture
-        self.shaderProgram['u_texture_0']=0
-        self.texture.use()
+        self.shaderProgram['u_texture_0']=textureUnit
+        self.texture.use(textureUnit)
         #viewing
         self.shaderProgram['m_proj'].write(self.engine.camera.projMatrix)
         self.shaderProgram['m_view'].write(self.engine.camera.viewMatrix)

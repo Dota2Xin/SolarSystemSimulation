@@ -9,22 +9,22 @@ from GUI import solarSystemData
 
 def main():
     #Params
-    timeScale=1.0 #describes the correspondence between real time and sim time
+    timeScale=1000.0 #describes the correspondence between real time and sim time
 
     #Initialize this to solar system
     #describes the current state numerically
     currentState=np.asarray([[-1.0,0.0,0.0,.0000913393398,.0001582044,0.0,1000,.5],[1.0,0.0,0.0,.0000913393398,-.0001582044,0.0,1000,.5], [0.0,-1.732,0.0,-.00018267868,0.0,0.0,1000,.5]])
     names = {"Sphere1": 0, "Sphere2":1, "Sphere3":2}
-
-    #currentState, names= solarSystemData.getSolarSystemData()
+    textures=["earth", "moon", "mars"]
+    #currentState, names, textures= solarSystemData.getSolarSystemData()
     #print(currentState)
     #Dictionary that contains the full state of the solar system, references to physical data, as well as graphics data
     mathematicalPositions=[]
     cameraPos=[currentState[0][0],currentState[0][1],currentState[0][2]]
-    graphicsSettings={"cameraSpeed": .01, "cameraSensitivity": .05, "cameraFrustumParams": [cameraPos,glm.vec3(0), [0.0,1.0,.5]]}
+    graphicsSettings={"cameraSpeed": 10.0, "cameraSensitivity": .05, "cameraFrustumParams": [cameraPos,glm.vec3(0), [0.0,1.0,.5]]}
     #Initialize window
-    engine=graphicsEngine(graphicsSettings,names, currentState)
-    deltaTime=engine.clock.tick(60)
+    engine=graphicsEngine(graphicsSettings,names, currentState, textures)
+    deltaTime=engine.clock.tick(60)*.001
     pg.event.set_grab(True)
     pg.mouse.set_visible(False)
     run=True
@@ -34,7 +34,7 @@ def main():
         engine.updatePositions(names,currentState)
         engine.render()
         engine.camera.update(deltaTime)
-        deltaTime=engine.clock.tick(60)
+        deltaTime=engine.clock.tick(60)*.001
         for event in pg.event.get():
             if event.type==pg.QUIT:
                 run=False

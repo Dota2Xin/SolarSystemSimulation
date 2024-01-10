@@ -13,13 +13,15 @@ def getSolarSystemData():
     stateArray=[]
     names={}
     count=0
+    textures=[]
     for object in objectList:
         currentObject=np.asarray(getObjectData(object[1])+[float(object[3])/(10**27)]+[float(object[4])/10000000])
         stateArray.append(currentObject)
         names[object[0]]=count
+        textures.append(object[2])
         count+=1
     stateArray=np.asarray(stateArray)
-    return stateArray, names
+    return stateArray, names, textures
 
 
 def getVar(dataText, type):

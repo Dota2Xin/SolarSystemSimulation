@@ -6,7 +6,7 @@ from .models import *
 from .camera import *
 
 class graphicsEngine:
-    def __init__(self,graphicsSettings,names, currentState, winSize=(1300,700)):
+    def __init__(self,graphicsSettings,names, currentState, textures, winSize=(1300,700)):
         pg.init()
         self.winSize=winSize
 
@@ -20,7 +20,7 @@ class graphicsEngine:
 
         self.ctx=mgl.create_context()
         #self.ctx.front_face='cw'
-        #self.ctx.enable(flags=mgl.DEPTH_TEST) #| mgl.CULL_FACE)
+        self.ctx.enable(flags=mgl.DEPTH_TEST) #| mgl.CULL_FACE)
 
         self.clock=pg.time.Clock()
 
@@ -30,18 +30,18 @@ class graphicsEngine:
         self.camera=camera([50,.1,10000],cameraParams, self.winSize, speedParams)
         #scene
         self.scene={}
-        self.createScene(names,currentState)
+        self.createScene(names,currentState, textures)
 
-    def createScene(self,names, currentState):
+    def createScene(self,names, currentState, textures):
         for name in names:
-            self.scene[name]=sphere(currentState[names[name]][-1],currentState[names[name]][0:3],self)
+            self.scene[name]=sphere(currentState[names[name]][-1],currentState[names[name]][0:3],self,textureUnit=names[name], textureName=textures[names[name]])
 
     def updatePositions(self, positionNames, positionVals):
         for obj in positionNames:
             self.scene[obj].update(positionVals[positionNames[obj]][0:3])
 
-    def addRegularPlanet(self, position, radius, name):
-        self.scene[name]=sphere(radius, position, self)
+    def addRegularPlanet(self, position, radius, name, textureIndex=0, texture="earth"):
+        self.scene[name]=sphere(radius, position, self,textureUnit=textureIndex, textureName=texture)
 
     def render(self):
         #clears the framebuffer and then swaps buffers
