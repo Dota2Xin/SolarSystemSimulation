@@ -6,7 +6,7 @@ from .models import *
 from .camera import *
 
 class graphicsEngine:
-    def __init__(self,graphicsSettings,names, currentState, textures, winSize=(1300,700)):
+    def __init__(self,graphicsSettings,names, currentState, textures, winSize=[1300,700]):
         pg.init()
         self.winSize=winSize
 
@@ -16,7 +16,7 @@ class graphicsEngine:
         pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
 
         #set pg to display using doublebuffer
-        pg.display.set_mode(self.winSize,flags=pg.OPENGL | pg.DOUBLEBUF)
+        self.screen=pg.display.set_mode(self.winSize,flags=pg.OPENGL | pg.DOUBLEBUF | pg.RESIZABLE)
 
         self.ctx=mgl.create_context()
         #self.ctx.front_face='cw'
@@ -42,6 +42,12 @@ class graphicsEngine:
 
     def addRegularPlanet(self, position, radius, name, textureIndex=0, texture="earth"):
         self.scene[name]=sphere(radius, position, self,textureUnit=textureIndex, textureName=texture)
+
+    def updateScreenWindowed(self, winSize):
+        self.winSize=winSize
+        self.screen=pg.display.set_mode(self.winSize,flags=pg.OPENGL | pg.DOUBLEBUF | pg.RESIZABLE)
+        self.camera.width=winSize[0]
+        self.camera.aspectRatio=winSize[0]/winSize[1]
 
     def render(self):
         #clears the framebuffer and then swaps buffers

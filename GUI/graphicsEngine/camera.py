@@ -40,7 +40,7 @@ class camera:
         self.move(dt)
         self.rotate()
         self.viewMatrix=glm.lookAt(self.position,self.position+self.forward,self.up)
-        pg.mouse.set_pos(self.width/2, self.width/(2*self.aspectRatio))
+        #pg.mouse.set_pos(self.width/2, self.width/(2*self.aspectRatio))
 
 
     def rotate(self):

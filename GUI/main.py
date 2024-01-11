@@ -10,7 +10,6 @@ from GUI import solarSystemData
 def main():
     #Params
     timeScale=1000.0 #describes the correspondence between real time and sim time
-
     #Initialize this to solar system
     #describes the current state numerically
     currentState=np.asarray([[-1.0,0.0,0.0,.0000913393398,.0001582044,0.0,1000,.5],[1.0,0.0,0.0,.0000913393398,-.0001582044,0.0,1000,.5], [0.0,-1.732,0.0,-.00018267868,0.0,0.0,1000,.5]])
@@ -27,6 +26,7 @@ def main():
     deltaTime=engine.clock.tick(60)*.001
     pg.event.set_grab(True)
     pg.mouse.set_visible(False)
+    freeMouse=False
     run=True
     objCount=len(currentState)
     while run:
@@ -45,9 +45,19 @@ def main():
                     currentState=controlEntities.addObject(f"Sphere{objCount}", [currentPos[0], currentPos[1], currentPos[2], 0.0,0.0,0.0,1000,1.0], engine, currentState, names)
                 if event.key==pg.K_y:
                     print(engine.camera.position)
+                if event.key==pg.K_f:
+                    freeMouse= not freeMouse
+                    pg.mouse.set_visible(freeMouse)
+                    pg.event.set_grab(not freeMouse)
+            elif event.type == pg.VIDEORESIZE:
+                screenSize=[event.w, event.h]
+                engine.updateScreenWindowed(screenSize)
 
     engine.destroy()
     pg.quit()
 
 if __name__=='__main__':
-    main()
+    try:
+        main()
+    finally:
+        pg.quit()
