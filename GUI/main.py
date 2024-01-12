@@ -6,7 +6,6 @@ import glm
 import controlEntities
 from GUI import solarSystemData
 
-
 def main():
     #Params
     timeScale=1000.0 #describes the correspondence between real time and sim time
@@ -29,6 +28,7 @@ def main():
     freeMouse=False
     run=True
     objCount=len(currentState)
+
     while run:
         currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime*timeScale))
         engine.updatePositions(names,currentState)

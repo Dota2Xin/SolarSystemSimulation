@@ -4,6 +4,7 @@ import glm
 import pygame as pg
 from .models import *
 from .camera import *
+from .menu import *
 
 class graphicsEngine:
     def __init__(self,graphicsSettings,names, currentState, textures, winSize=[1300,700]):
@@ -24,6 +25,7 @@ class graphicsEngine:
 
         self.clock=pg.time.Clock()
 
+        self.menu=menu(self.winSize,self)
 
         cameraParams=graphicsSettings["cameraFrustumParams"]
         speedParams=[graphicsSettings["cameraSpeed"], graphicsSettings["cameraSensitivity"]]
@@ -54,6 +56,8 @@ class graphicsEngine:
         self.ctx.clear(color=(.08,.16,.18))
         for obj in self.scene:
             self.scene[obj].render()
+        self.menu.render()
+        self.screen.blit(self.menu.menuSurface, tuple(self.menu.position))
         pg.display.flip()
 
     def destroy(self):
