@@ -25,8 +25,6 @@ class graphicsEngine:
 
         self.clock=pg.time.Clock()
 
-        self.menu=menu(self.winSize,self)
-
         cameraParams=graphicsSettings["cameraFrustumParams"]
         speedParams=[graphicsSettings["cameraSpeed"], graphicsSettings["cameraSensitivity"]]
         self.camera=camera([50,.1,10000],cameraParams, self.winSize, speedParams)
@@ -56,8 +54,8 @@ class graphicsEngine:
         self.ctx.clear(color=(.08,.16,.18))
         for obj in self.scene:
             self.scene[obj].render()
-        self.menu.render()
-        self.screen.blit(self.menu.menuSurface, tuple(self.menu.position))
+        #self.menu.render()
+        #self.screen.blit(self.menu.menuSurface, tuple(self.menu.position))
         pg.display.flip()
 
     def destroy(self):

@@ -5,6 +5,7 @@ import numpy as np
 import glm
 import controlEntities
 from GUI import solarSystemData
+from GUI.graphicsEngine.menu import menu
 
 def main():
     #Params
@@ -49,6 +50,10 @@ def main():
                     freeMouse= not freeMouse
                     pg.mouse.set_visible(freeMouse)
                     pg.event.set_grab(not freeMouse)
+                if event.key==pg.K_m:
+                    tempMenu=menu(engine.winSize)
+                    tempMenu.run()
+                    engine.screen=pg.display.set_mode(engine.winSize,flags=pg.OPENGL | pg.DOUBLEBUF | pg.RESIZABLE)
             elif event.type == pg.VIDEORESIZE:
                 screenSize=[event.w, event.h]
                 engine.updateScreenWindowed(screenSize)

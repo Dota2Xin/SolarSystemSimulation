@@ -1,15 +1,16 @@
 from GUI.graphicsEngine.button import *
+import pygame as pg
 
 class menu:
 
-    def __init__(self, winSize, engine):
+    def __init__(self, winSize):
         self.state=0 #describes state of menu, 0= Menu is off, 1=general graphics/app options,
                      # 2=simulation options, 3=Menu for adding entity, 4=Menu for viewing, editing, and taking away entities
 
         self.height = winSize[1] / 2.0
         self.width = winSize[0] / 6.0
 
-        self.engine=engine
+        self.screen=pg.display.set_mode(winSize, flags= pg.DOUBLEBUF | pg.RESIZABLE)
 
         self.menuSurface = pg.Surface((int(self.width), int(self.height)))
         #Play with the scaling options
@@ -46,6 +47,18 @@ class menu:
     def renderEntityMenu(self):
         pass
 
+    def run(self):
+        running=True
+        while running:
+            #self.render()
+            self.screen.fill((150, 150, 255))
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    running = False
+                    pg.quit()
+                elif event.type==pg.KEYUP:
+                    if event.key==pg.K_m:
+                        running=False
 
 
 
