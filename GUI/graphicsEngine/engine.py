@@ -7,7 +7,7 @@ from .camera import *
 from .menu import *
 
 class graphicsEngine:
-    def __init__(self,graphicsSettings,names, currentState, textures, winSize=[1300,700]):
+    def __init__(self,graphicsSettings,names, currentState, textures, winSize=[1300,700], cameraExtras=[]):
         pg.init()
         self.winSize=winSize
 
@@ -27,7 +27,10 @@ class graphicsEngine:
 
         cameraParams=graphicsSettings["cameraFrustumParams"]
         speedParams=[graphicsSettings["cameraSpeed"], graphicsSettings["cameraSensitivity"]]
-        self.camera=camera([50,.1,10000],cameraParams, self.winSize, speedParams)
+        if cameraExtras !=[]:
+            self.camera=camera([50,.1,10000],cameraParams, self.winSize, speedParams,cameraExtras=cameraExtras)
+        else:
+            self.camera=camera([50,.1,10000],cameraParams, self.winSize, speedParams)
         #scene
         self.scene={}
         self.createScene(names,currentState, textures)

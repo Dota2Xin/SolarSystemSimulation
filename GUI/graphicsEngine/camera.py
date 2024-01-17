@@ -13,22 +13,28 @@ class camera:
     movementParams- Array that takes in params about movement [Speed, sensitivity]
 
     '''
-    def __init__(self, frustumParams, cameraParams, screenParams, speedParams, pitch=0, yaw=-90):
+    def __init__(self, frustumParams, cameraParams, screenParams, speedParams, pitch=0, yaw=-90, cameraExtras=[]):
         self.frustumParams=frustumParams
         self.width=screenParams[0]
         self.aspectRatio=screenParams[0]/screenParams[1]
         self.position=glm.vec3(cameraParams[0][0],cameraParams[0][1],cameraParams[0][2])
         self.up=cameraParams[2]
         self.center=cameraParams[1]
-
-        #orientation commands
-        self.pitch=pitch
-        self.yaw=yaw
-
-        #camera basis vectors
-        self.forward = glm.vec3(0, 0, -1)
-        self.up = glm.vec3(0, 1, 0)
-        self.right = glm.vec3(1, 0, 0)
+        if cameraExtras !=[]:
+            self.pitch = cameraExtras[0]
+            self.yaw = cameraExtras[1]
+            # camera basis vectors
+            self.forward = cameraExtras[2]
+            self.up = cameraExtras[3]
+            self.right = cameraExtras[4]
+        else:
+            #orientation commands
+            self.pitch=pitch
+            self.yaw=yaw
+            #camera basis vectors
+            self.forward = glm.vec3(0, 0, -1)
+            self.up = glm.vec3(0, 1, 0)
+            self.right = glm.vec3(1, 0, 0)
 
         self.projMatrix=glm.perspective(glm.radians(frustumParams[0]),self.aspectRatio,frustumParams[1],frustumParams[2])
         self.viewMatrix=glm.lookAt(self.position,self.position+self.forward,self.up)

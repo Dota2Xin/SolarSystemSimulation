@@ -51,9 +51,21 @@ def main():
                     pg.mouse.set_visible(freeMouse)
                     pg.event.set_grab(not freeMouse)
                 if event.key==pg.K_m:
-                    tempMenu=menu(engine.winSize)
+                    freeMouse=True
+                    pg.mouse.set_visible(True)
+                    pg.event.set_grab(False)
+                    ###UPDATE CAMERA SETTINGS BEFORE DESTROY ENGINE
+                    graphicsSettings = {"cameraSpeed": 10.0, "cameraSensitivity": .05,
+                                        "cameraFrustumParams": [engine.camera.position, glm.vec3(0), [0.0, 1.0, .5]]}
+                    cameraExtras=[engine.camera.pitch, engine.camera.yaw, engine.camera.forward, engine.camera.up, engine.camera.right]
+                    engine.destroy()
+                    tempMenu = menu(engine.winSize)
                     tempMenu.run()
-                    engine.screen=pg.display.set_mode(engine.winSize,flags=pg.OPENGL | pg.DOUBLEBUF | pg.RESIZABLE)
+                    #RESET CAMERA TO HAVE RIGHT SETTINGS
+                    engine=graphicsEngine(graphicsSettings,names,currentState,textures, cameraExtras=cameraExtras)
+                    freeMouse = False
+                    pg.mouse.set_visible(False)
+                    pg.event.set_grab(True)
             elif event.type == pg.VIDEORESIZE:
                 screenSize=[event.w, event.h]
                 engine.updateScreenWindowed(screenSize)
