@@ -5,7 +5,7 @@ from GUI.graphicsEngine.buttonFunctions import *
 
 class textbox:
 
-    def __init__(self, color,position, size, menu,borderThickness=1):
+    def __init__(self, color,position, size, menu,borderThickness=1, mutable=True):
         # position of top left of button
         self.borderThickness = borderThickness
         self.position = position
@@ -28,6 +28,7 @@ class textbox:
 
         self.on=False
         self.pressed=False
+        self.mutable=mutable
         # self.hover=False
 
     def checkInside(self, eventPos):
@@ -57,8 +58,21 @@ class textbox:
         pg.draw.rect(self.menu.screen, self.color, (
         self.position[0] + self.borderThickness, self.position[1] + self.borderThickness,
         self.width - 2 * self.borderThickness, self.height - 2 * self.borderThickness))
+
+
         textSurface = self.font.render(self.text, True, self.textColor)
         # print("HELLO NURESE!!!!")
         textX = int(self.position[0] + (self.width - textSurface.get_width()) / 2.0)
         textY = int(self.position[1] + (self.height - textSurface.get_height()) / 2.0)
         self.menu.screen.blit(textSurface, (textX, textY))
+
+        if self.on:
+            if len(self.text)==0:
+                barX=textX
+            else:
+                barX = textX + (self.currentLocation/len(self.text)) * textSurface.get_width()
+            barY = textY #textSurface.get_height()
+            pg.draw.rect(self.menu.screen, self.textColor, (
+                barX, barY,
+                1, 15))
+

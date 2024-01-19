@@ -87,10 +87,19 @@ class menu:
                         for textbox in self.textboxes:
                             if textbox.on:
                                 currentStr = str(pg.key.name(event.key))
-                                if event.key == pg.K_RIGHT:
-                                    textbox.currentLocation=textbox.currentLocation-1
+                                if event.key== pg.K_SPACE:
+                                    textbox.currentLocation = textbox.currentLocation + 1
+                                    textbox.text = textbox.text[0:textbox.currentLocation] + " " + textbox.text[textbox.currentLocation:]
+                                elif event.key == pg.K_RIGHT:
+                                    textbox.currentLocation=textbox.currentLocation+1
                                 elif event.key == pg.K_LEFT:
                                     textbox.currentLocation=textbox.currentLocation-1
+                                elif event.key== pg.K_BACKSPACE:
+                                    if currentStr !="":
+                                        textbox.text=textbox.text[0:textbox.currentLocation-1]+textbox.text[textbox.currentLocation:]
+                                        textbox.currentLocation=textbox.currentLocation-1
+                                elif len(currentStr)>1:
+                                    currentStr=""
                                 else:
                                     textbox.text=textbox.text[0:textbox.currentLocation]+currentStr+textbox.text[textbox.currentLocation:]
                                     if currentStr !="":
@@ -98,15 +107,17 @@ class menu:
 
 
                 elif event.type==pg.KEYUP:
-                    if event.key==pg.K_m:
-                        running=False
+                    if not self.typing:
+                        if event.key==pg.K_m:
+                            running=False
                 elif event.type==pg.MOUSEBUTTONDOWN:
                     self.typing=False
                     if event.button==1:
                         for button in self.currentButtons:
                             button.checkInside(event.pos)
                         for textbox in self.currentTextboxes:
-                            textbox.checkInside(event.pos)
+                            if textbox.mutable:
+                                textbox.checkInside(event.pos)
                         for dropdown in self.currentDropdowns:
                             dropdown.checkInside(event.pos)
                             for dropdownButtons in dropdown.currentButtons:
