@@ -5,14 +5,14 @@ from GUI.graphicsEngine.buttonFunctions import *
 
 class dropdown:
 
-    def __init__(self, color,position, size, menu,options , borderThickness=1):
+    def __init__(self, color,position, size, menu,options , name, borderThickness=1):
         #position of top left of button
         self.borderThickness=borderThickness
         self.position=position
         self.height=size[0]
         self.width=size[1]
         self.color=color
-
+        self.name=name
         #Options the menu lets you select between
         self.options=options
         self.currentText=options[0]
@@ -41,7 +41,8 @@ class dropdown:
         for i in range(len(self.options)):
             xPos=self.position[0]
             yPos=self.position[1]+self.height+(i)*self.height/2.0
-            tempButton=button(self.color, [xPos, yPos],(self.height/2.0,self.width),self.options[i], self.menu, updateDropbox, [self, self.options[i]],borderThickness=1)
+            buttonName=self.name+"button"+str(i)
+            tempButton=button(self.color, [xPos, yPos],(self.height/2.0,self.width),self.options[i], self.menu, updateDropbox, [self, self.options[i]], buttonName, borderThickness=1)
             buttons.append(tempButton)
         return buttons
 

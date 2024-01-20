@@ -7,7 +7,7 @@ from .camera import *
 from .menu import *
 
 class graphicsEngine:
-    def __init__(self,graphicsSettings,names, currentState, textures, winSize=[1300,700], cameraExtras=[]):
+    def __init__(self,graphicsSettings,names, currentState, textures, winSize=[1300,700], cameraExtras=[], fullscreen=False):
         pg.init()
         self.winSize=winSize
 
@@ -17,7 +17,10 @@ class graphicsEngine:
         pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
 
         #set pg to display using doublebuffer
-        self.screen=pg.display.set_mode(self.winSize,flags=pg.OPENGL | pg.DOUBLEBUF | pg.RESIZABLE)
+        if fullscreen:
+            self.screen = pg.display.set_mode(self.winSize, flags=pg.OPENGL | pg.DOUBLEBUF | pg.FULLSCREEN)
+        else:
+            self.screen=pg.display.set_mode(self.winSize,flags=pg.OPENGL | pg.DOUBLEBUF | pg.RESIZABLE)
 
         self.ctx=mgl.create_context()
         #self.ctx.front_face='cw'

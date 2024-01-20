@@ -20,9 +20,14 @@ def main():
     #Dictionary that contains the full state of the solar system, references to physical data, as well as graphics data
     mathematicalPositions=[]
     cameraPos=[currentState[0][0],currentState[0][1],currentState[0][2]]
-    graphicsSettings={"cameraSpeed": 10.0, "cameraSensitivity": .05, "cameraFrustumParams": [cameraPos,glm.vec3(0), [0.0,1.0,.5]]}
+
+    cameraSpeed=10.0
+
+    currentSettings = {"fullscreen": False, "cameraSpeed": cameraSpeed, "simSpeed": timeScale, "collisions": False}
+
+    graphicsSettings={"cameraSpeed": cameraSpeed, "cameraSensitivity": .05, "cameraFrustumParams": [cameraPos,glm.vec3(0), [0.0,1.0,.5]]}
     #Initialize window
-    engine=graphicsEngine(graphicsSettings,names, currentState, textures)
+    engine=graphicsEngine(graphicsSettings,names, currentState, textures,fullscreen=currentSettings['fullscreen'])
     deltaTime=engine.clock.tick(60)*.001
     pg.event.set_grab(True)
     pg.mouse.set_visible(False)
@@ -40,7 +45,9 @@ def main():
             if event.type==pg.QUIT:
                 run=False
             elif event.type==pg.KEYUP:
-                if event.key==pg.K_i:
+                if event.key==pg.K_ESCAPE:
+                    run=False
+                elif event.key==pg.K_i:
                     currentPos=engine.camera.position+engine.camera.forward
                     objCount = objCount+1
                     currentState=controlEntities.addObject(f"Sphere{objCount}", [currentPos[0], currentPos[1], currentPos[2], 0.0,0.0,0.0,1000,1.0], engine, currentState, names)
@@ -55,18 +62,19 @@ def main():
                     pg.mouse.set_visible(True)
                     pg.event.set_grab(False)
                     ###UPDATE CAMERA SETTINGS BEFORE DESTROY ENGINE
-                    graphicsSettings = {"cameraSpeed": 10.0, "cameraSensitivity": .05,
+                    graphicsSettings = {"cameraSpeed": currentSettings["cameraSpeed"], "cameraSensitivity": .05,
                                         "cameraFrustumParams": [engine.camera.position, glm.vec3(0), [0.0, 1.0, .5]]}
                     cameraExtras=[engine.camera.pitch, engine.camera.yaw, engine.camera.forward, engine.camera.up, engine.camera.right]
                     engine.destroy()
-                    tempMenu = menu(engine.winSize)
-                    tempMenu.run()
+                    tempMenu = menu(engine.winSize, currentSettings,currentState,names, textures, currentSettings['fullscreen'])
+                    currentState, names, textures, currentSettings=tempMenu.run()
+                    timeScale=currentSettings["simSpeed"]
                     #RESET CAMERA TO HAVE RIGHT SETTINGS
-                    engine=graphicsEngine(graphicsSettings,names,currentState,textures, cameraExtras=cameraExtras)
+                    engine=graphicsEngine(graphicsSettings,names,currentState,textures, cameraExtras=cameraExtras, fullscreen=currentSettings["fullscreen"])
                     freeMouse = False
                     pg.mouse.set_visible(False)
                     pg.event.set_grab(True)
-            elif event.type == pg.VIDEORESIZE:
+            elif event.type == pg.VIDEORESIZE: #and not currentSettings['fullscreen']:
                 screenSize=[event.w, event.h]
                 engine.updateScreenWindowed(screenSize)
 

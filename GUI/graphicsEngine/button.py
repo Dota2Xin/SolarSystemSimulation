@@ -3,7 +3,7 @@ import numpy as np
 
 class button:
 
-    def __init__(self, color,position, size, text, menu, buttonFunc,buttonFuncParams, borderThickness=5):
+    def __init__(self, color,position, size, text, menu, buttonFunc,buttonFuncParams,name, borderThickness=5):
         #position of top left of button
         self.borderThickness=borderThickness
         self.buttonFuncParams=buttonFuncParams
@@ -12,7 +12,7 @@ class button:
         self.width=size[1]
         self.buttonFunc=buttonFunc
         self.color=color
-
+        self.name=name
         #engine the game is running
         self.menu=menu
 

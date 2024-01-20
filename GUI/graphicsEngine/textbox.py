@@ -5,14 +5,14 @@ from GUI.graphicsEngine.buttonFunctions import *
 
 class textbox:
 
-    def __init__(self, color,position, size, menu,borderThickness=1, mutable=True):
+    def __init__(self, color,position, size, menu,name,borderThickness=1, mutable=True):
         # position of top left of button
         self.borderThickness = borderThickness
         self.position = position
         self.height = size[0]
         self.width = size[1]
         self.color = color
-
+        self.name=name
         #text stuff, current location is essentially which part of the string we add to or take away from
         self.currentLocation=0
         self.text=""
