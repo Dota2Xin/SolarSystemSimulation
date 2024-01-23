@@ -5,14 +5,16 @@ from GUI.graphicsEngine.buttonFunctions import *
 
 class textbox:
 
-    def __init__(self, color,position, size, menu,name,borderThickness=1, mutable=True):
+    def __init__(self, color,position, size, menu,name,borderThickness=1, mutable=True, rightAligned=False):
         # position of top left of button
         self.borderThickness = borderThickness
         self.position = position
         self.height = size[0]
         self.width = size[1]
         self.color = color
+        self.ogColor=color
         self.name=name
+        self.rightAligned=rightAligned
         #text stuff, current location is essentially which part of the string we add to or take away from
         self.currentLocation=0
         self.text=""
@@ -42,11 +44,10 @@ class textbox:
         return False
 
     def unpress(self):
-        self.pressed=False
-        self.color=[self.color[0]*1.5,self.color[1]*1.5,self.color[2]*1.5]
-
+        self.color=self.ogColor
         if self.on:
             self.on=False
+            self.pressed = False
         else:
             self.on=True
             self.menu.typing=True
@@ -62,7 +63,9 @@ class textbox:
 
         textSurface = self.font.render(self.text, True, self.textColor)
         # print("HELLO NURESE!!!!")
-        textX = int(self.position[0] + (self.width - textSurface.get_width()) / 2.0)
+        textX = int(self.position[0] + (self.width*.03))
+        if self.rightAligned:
+            textX= int(self.position[0] + (self.width*.97)-textSurface.get_width())
         textY = int(self.position[1] + (self.height - textSurface.get_height()) / 2.0)
         self.menu.screen.blit(textSurface, (textX, textY))
 

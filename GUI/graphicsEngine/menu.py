@@ -85,6 +85,17 @@ class menu:
                 self.currentButtons.append(button)
                 print("HERE WE Gz")
 
+        textboxNames={"graphicsLabel":1, "fullscreenLabel":1, "simulationSettings":1, "simSpeedLabel":1, "cameraSpeedLabel":1, "cameraSpeed":1, "simSpeed":1, "collisionsLabel":1}
+
+        for textbox in self.textboxes:
+            if textbox.name in textboxNames:
+                self.currentTextboxes.append(textbox)
+
+        dropdownNames={"fullscreen":1, "collisions":1}
+
+        for dropdown in self.dropDowns:
+            if dropdown.name in dropdownNames:
+                self.currentDropdowns.append(dropdown)
 
     def renderSimulationSettings(self):
         pass

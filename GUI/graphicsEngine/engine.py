@@ -42,9 +42,10 @@ class graphicsEngine:
         for name in names:
             self.scene[name]=sphere(currentState[names[name]][-1],currentState[names[name]][0:3],self,textureUnit=names[name], textureName=textures[names[name]])
 
-    def updatePositions(self, positionNames, positionVals):
+    def updatePositions(self, positionNames, positionVals, lengthScaleFactor):
         for obj in positionNames:
-            self.scene[obj].update(positionVals[positionNames[obj]][0:3])
+            position=np.asarray(positionVals[positionNames[obj]][0:3])/lengthScaleFactor
+            self.scene[obj].update(position)
 
     def addRegularPlanet(self, position, radius, name, textureIndex=0, texture="earth"):
         self.scene[name]=sphere(radius, position, self,textureUnit=textureIndex, textureName=texture)
@@ -57,7 +58,7 @@ class graphicsEngine:
 
     def render(self):
         #clears the framebuffer and then swaps buffers
-        self.ctx.clear(color=(.08,.16,.18))
+        self.ctx.clear(color=(0.0,0.0,0.0))
         for obj in self.scene:
             self.scene[obj].render()
         #self.menu.render()
