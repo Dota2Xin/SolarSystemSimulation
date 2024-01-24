@@ -10,7 +10,6 @@ class graphicsEngine:
     def __init__(self,graphicsSettings,names, currentState, textures, winSize=[1300,700], cameraExtras=[], fullscreen=False):
         pg.init()
         self.winSize=winSize
-
         #tell pg what openGL to use
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
@@ -31,24 +30,26 @@ class graphicsEngine:
         cameraParams=graphicsSettings["cameraFrustumParams"]
         speedParams=[graphicsSettings["cameraSpeed"], graphicsSettings["cameraSensitivity"]]
         if cameraExtras !=[]:
-            self.camera=camera([50,.1,10000],cameraParams, self.winSize, speedParams,cameraExtras=cameraExtras)
+            self.camera=camera([50,.1,100000],cameraParams, self.winSize, speedParams,cameraExtras=cameraExtras)
         else:
-            self.camera=camera([50,.1,10000],cameraParams, self.winSize, speedParams)
+            self.camera=camera([50,.1,100000],cameraParams, self.winSize, speedParams)
         #scene
         self.scene={}
         self.createScene(names,currentState, textures)
+        self.skybox = cube(99999, self.camera.position, self,textureName="starBackground")
 
     def createScene(self,names, currentState, textures):
         for name in names:
-            self.scene[name]=sphere(currentState[names[name]][-1],currentState[names[name]][0:3],self,textureUnit=names[name], textureName=textures[names[name]])
+            self.scene[name]=sphere(currentState[names[name]][-1],currentState[names[name]][0:3],self,textureUnit=names[name]+1, textureName=textures[names[name]])
 
     def updatePositions(self, positionNames, positionVals, lengthScaleFactor):
         for obj in positionNames:
             position=np.asarray(positionVals[positionNames[obj]][0:3])/lengthScaleFactor
             self.scene[obj].update(position)
+        self.skybox.update(self.camera.position)
 
     def addRegularPlanet(self, position, radius, name, textureIndex=0, texture="earth"):
-        self.scene[name]=sphere(radius, position, self,textureUnit=textureIndex, textureName=texture)
+        self.scene[name]=sphere(radius, position, self,textureUnit=textureIndex+1, textureName=texture)
 
     def updateScreenWindowed(self, winSize):
         self.winSize=winSize
@@ -61,6 +62,7 @@ class graphicsEngine:
         self.ctx.clear(color=(0.0,0.0,0.0))
         for obj in self.scene:
             self.scene[obj].render()
+        self.skybox.render()
         #self.menu.render()
         #self.screen.blit(self.menu.menuSurface, tuple(self.menu.position))
         pg.display.flip()

@@ -23,7 +23,7 @@ def main():
     radiusScaleFactor=0
     cameraPos=[currentState[0][0]/lengthScaleFactor,currentState[0][1]/lengthScaleFactor,currentState[0][2]/lengthScaleFactor]
 
-    cameraSpeed=10.0
+    cameraSpeed=100.0
 
     currentSettings = {"fullscreen": False, "cameraSpeed": cameraSpeed, "simSpeed": timeScale, "collisions": False}
 

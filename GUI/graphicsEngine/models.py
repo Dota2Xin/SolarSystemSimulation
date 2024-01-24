@@ -16,10 +16,11 @@ class sphere:
     Name- String corresponding to name of sphere
     context- Passes the context we're currently working with
     '''
-    def __init__(self, radius, position, engine,textureUnit=0, textureName="earth"):
+    def __init__(self, radius, position, engine,textureUnit=0, textureName="earth", resolution=32):
         self.radius=radius
         self.position=position
         self.ctx=engine.ctx
+        self.resolution=resolution
         self.engine=engine
         self.vbo=self.getVertexBuffer()
         self.shaderProgram=self.getShaderProgram('sphereBasic')
@@ -64,8 +65,8 @@ class sphere:
     #in format vertex, normal
     def getVertexArray(self):
         #sets the resolution of the spheres from a 3D standpoint
-        latitudeSegments=32
-        longitudeSegments=32
+        latitudeSegments=self.resolution
+        longitudeSegments=self.resolution
 
         vertex=[]
         textureCoords=[]
@@ -143,4 +144,103 @@ class sphere:
             fragmentShader=file.read()
 
         program=self.ctx.program(vertex_shader=vertexShader, fragment_shader=fragmentShader)
+        return program
+
+class cube:
+    '''
+        Class for masking a sphere using modernGL
+
+        Inputs:
+        Radius- Float of radius of sphere
+        Position- Array that looks like [x,y,z] position of center of sphere
+        Name- String corresponding to name of sphere
+        context- Passes the context we're currently working with
+        '''
+
+    def __init__(self, sideLength, position, engine, textureUnit=0, textureName="earth", resolution=32):
+        self.sideLength = sideLength
+        self.position = position
+        self.ctx = engine.ctx
+        self.resolution = resolution
+        self.engine = engine
+        self.vbo = self.getVertexBuffer()
+        self.shaderProgram = self.getShaderProgram('sphereBasic')
+        self.vao = self.getVertexArrayObject()
+        self.modelMatrix = glm.mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, position[0], position[1], position[2], 1)
+        self.texture = self.getTexture(textureName)
+        self.onInit(textureUnit)
+
+    def onInit(self, textureUnit):
+        # texture
+        self.shaderProgram['u_texture_0'] = textureUnit
+        self.texture.use(textureUnit)
+        # viewing
+        self.shaderProgram['m_proj'].write(self.engine.camera.projMatrix)
+        self.shaderProgram['m_view'].write(self.engine.camera.viewMatrix)
+        self.shaderProgram['m_model'].write(self.modelMatrix)
+
+    def update(self, position):
+        self.position = position
+        self.modelMatrix = glm.mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, position[0], position[1], position[2], 1)
+        self.shaderProgram['m_model'].write(self.modelMatrix)
+        self.shaderProgram['m_proj'].write(self.engine.camera.projMatrix)
+        self.shaderProgram['m_view'].write(self.engine.camera.viewMatrix)
+
+    def render(self):
+        self.vao.render()
+
+    def destroy(self):
+        self.vbo.release()
+        self.shaderProgram.release()
+        self.vao.release()
+
+    def getTexture(self, name):
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        texture = pg.image.load(os.path.join(currentDir, f'textures/{name}.jpg')).convert()
+        texture = pg.transform.flip(texture, flip_x=False, flip_y=True)
+        texture = self.ctx.texture(size=texture.get_size(), components=3, data=pg.image.tostring(texture, "RGB"))
+        return texture
+
+    # calculates the locations of the vertices and the value of the vertex normals at every point and reuturns them
+    # in format vertex, normal
+    def getVertexArray(self):
+        a=self.sideLength
+        vertex=[(-a,-a,-a),(a,-a,a),(a,a,a),(-a,a,a,),(-a,a,-a),(-a,-a,-a), (a,-a,-a), (a,a,-a)]
+
+        indices=[(0,2,3),(0,1,2),(1,7,2),(1,6,7),(6,5,4),(4,7,6),(3,4,5),(3,5,0),(3,7,4),(3,2,7),(0,6,1),(0,5,6)]
+        textureCoordinates=[(0,0),(1,0),(1,1),(0,1)]
+        textureCoordIndex=[(0,2,3),(0,1,2),(0,2,3),(0,1,2),(0,1,2),(2,3,0),(2,3,0),(2,0,1),(0,2,3),(0,1,2),(3,1,2),(3,0,1)]
+
+        textureData=self.getData(textureCoordinates,textureCoordIndex)
+        vertexData=self.getData(vertex, indices)
+
+        fullData=np.hstack([vertexData, textureData])
+        return fullData
+
+    @staticmethod
+    def getData(vertices, indices):
+        vertexData=[vertices[ind] for triangle in indices for ind in triangle]
+        return np.array(vertexData, dtype='f4')
+
+    def getVertexBuffer(self):
+        vertexData = self.getVertexArray()
+        # vbo=self.ctx.buffer(np.concatenate([vertexData[0],vertexData[1]]))
+        vbo = self.ctx.buffer(vertexData)
+        return vbo
+
+    def getVertexArrayObject(self):
+        vao = self.ctx.vertex_array(self.shaderProgram, [(self.vbo, '3f 2f', 'in_position', "in_texcoord_0")])
+        return vao
+
+    def getShaderProgram(self, shaderName):
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+
+        totalPathVert = os.path.join(currentDir, f'shaders/{shaderName}.vert')
+        totalPathFrag = os.path.join(currentDir, f'shaders/{shaderName}.frag')
+        with open(totalPathVert) as file:
+            vertexShader = file.read()
+        with open(totalPathFrag) as file:
+            fragmentShader = file.read()
+
+        program = self.ctx.program(vertex_shader=vertexShader, fragment_shader=fragmentShader)
         return program
