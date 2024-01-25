@@ -38,7 +38,18 @@ def main():
     objCount=len(currentState)
 
     while run:
-        currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime*timeScale))
+        timeStep=timeScale
+        '''
+        Some logic for when timescales become more important
+        if timeScale>=10000:
+            while timeStep>10000:
+                currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * 10000))
+                timeStep=timeStep-10000
+            currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * timeStep))
+        else:
+            currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime*timeScale))
+        '''
+        currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * timeScale))
         engine.updatePositions(names,currentState, lengthScaleFactor)
         engine.render()
         engine.camera.update(deltaTime)

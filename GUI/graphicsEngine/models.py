@@ -205,7 +205,7 @@ class cube:
     # in format vertex, normal
     def getVertexArray(self):
         a=self.sideLength
-        vertex=[(-a,-a,-a),(a,-a,a),(a,a,a),(-a,a,a,),(-a,a,-a),(-a,-a,-a), (a,-a,-a), (a,a,-a)]
+        vertex=[(-a,-a,a),(a,-a,a),(a,a,a),(-a,a,a,),(-a,a,-a),(-a,-a,-a), (a,-a,-a), (a,a,-a)]
 
         indices=[(0,2,3),(0,1,2),(1,7,2),(1,6,7),(6,5,4),(4,7,6),(3,4,5),(3,5,0),(3,7,4),(3,2,7),(0,6,1),(0,5,6)]
         textureCoordinates=[(0,0),(1,0),(1,1),(0,1)]

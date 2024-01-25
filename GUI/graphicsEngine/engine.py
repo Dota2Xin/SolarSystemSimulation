@@ -36,7 +36,7 @@ class graphicsEngine:
         #scene
         self.scene={}
         self.createScene(names,currentState, textures)
-        self.skybox = cube(99999, self.camera.position, self,textureName="starBackground")
+        self.skybox = cube(49999, self.camera.position, self,textureName="hipp8")
 
     def createScene(self,names, currentState, textures):
         for name in names:
@@ -59,7 +59,7 @@ class graphicsEngine:
 
     def render(self):
         #clears the framebuffer and then swaps buffers
-        self.ctx.clear(color=(0.0,0.0,0.0))
+        self.ctx.clear(color=(1.0,.4,.4))
         for obj in self.scene:
             self.scene[obj].render()
         self.skybox.render()

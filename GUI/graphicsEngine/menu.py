@@ -27,13 +27,17 @@ class menu:
         self.currentState=currentState
         self.names=names
         self.textures=textures
+
+        self.currentEntityInfo=[]
         # position of top left of menu
         #self.position = [winSize[0]-self.width*1.1, winSize[1]-self.height*1.1]
         #print(self.position)
         self.currentButtons=[]
         self.currentDropdowns=[]
         self.currentTextboxes = []
+        self.currentEntityMenus=[]
 
+        self.entityMenus=[]
         self.buttons=[]
         self.dropDowns=[]
         self.textboxes=[]
@@ -44,6 +48,7 @@ class menu:
     #objects means buttons, rectangles, etc...
     def onInit(self):
         createMainMenu(self)
+        createEntityMenu(self)
 
         self.buttons.append(button([255,255,255],(int(self.height/2.0),int(self.width/2.0)),(100,200),"Press me",self, changeColor, self, "button1"))
         self.currentButtons.append(self.buttons[0])
@@ -57,6 +62,7 @@ class menu:
         self.currentTextboxes.append(textBox1)
 
         self.renderMainSettings()
+
         pass
 
     def render(self):
@@ -71,6 +77,9 @@ class menu:
         for dropdown in self.currentDropdowns:
             dropdown.render()
 
+        for entityMenu in self.currentEntityMenus:
+            entityMenu.render()
+
         pg.display.flip()
         #self.engine.screen.blit(self.menuSurface, tuple(self.position))
 
@@ -79,6 +88,7 @@ class menu:
         self.currentButtons=[]
         self.currentTextboxes=[]
         self.currentDropdowns=[]
+        self.currentEntityMenus = []
 
         for button in self.buttons:
             if button.name in buttonNames:
@@ -104,6 +114,12 @@ class menu:
         pass
 
     def renderEntityMenu(self):
+        self.currentButtons = []
+        self.currentTextboxes = []
+        self.currentDropdowns = []
+        self.currentEntityMenus=[]
+
+        self.currentEntityMenus.append(self.entityMenus[0])
         pass
 
     def controlTextboxKeydown(self, event):

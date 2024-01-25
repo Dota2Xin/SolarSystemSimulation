@@ -4,6 +4,7 @@ import pygame as pg
 from GUI.graphicsEngine.buttonFunctions import *
 from GUI.graphicsEngine.dropdown import *
 from GUI.graphicsEngine.textbox import *
+from GUI.graphicsEngine.entityMenuBox import *
 
 #creates the buttons and textboxes and stuff for the main menu
 def createMainMenu(menu):
@@ -85,4 +86,11 @@ def createMainMenu(menu):
     pass
 
 def createEntityMenu(menu):
+    buttonColor = (255, 255, 255)
+
+    entityPosition=[menu.width/10.0, menu.height/10.0]
+    entityMenu=entityMenuBox(buttonColor,entityPosition,[menu.height*(3.0/4.0), menu.width/2.0],menu,"entityMenu")
+
+    menu.entityMenus.append(entityMenu)
+
     pass

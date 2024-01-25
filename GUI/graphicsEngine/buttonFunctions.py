@@ -44,4 +44,14 @@ def applyChanges(menu):
     print("ALL GOOD")
 
 def entityMenuSwap(menu):
+    menu.renderEntityMenu()
+    pass
+
+def upEntity(entityMenu):
+    pass
+
+def downEntity(entityMenu):
+    pass
+
+def entitySwitch(menu):
     pass
