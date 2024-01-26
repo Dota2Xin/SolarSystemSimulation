@@ -12,6 +12,7 @@ class switch:
         self.width=size[1]
         self.switchFunc=switchFunc
         self.color=color
+        self.ogColor=color
         self.name=name
         #engine the game is running
         self.menu=menu
@@ -46,11 +47,12 @@ class switch:
         self.borderThickness=self.borderThickness/2
         #self.color=[self.color[0]*1.5,self.color[1]*1.5,self.color[2]*1.5]
         self.switchFunc(self.switchFuncParams)
-        print("Working lolz")
 
     def switchOff(self):
         self.on=False
-        self.color = [self.color[0] * 1.5, self.color[1] * 1.5, self.color[2] * 1.5]
+        self.pressed=False
+        self.borderThickness = self.borderThickness/2.0
+        self.color = self.ogColor
 
     def render(self):
         invertColor = [255 - self.color[0], 255 - self.color[1], 255 - self.color[2]]

@@ -48,10 +48,36 @@ def entityMenuSwap(menu):
     pass
 
 def upEntity(entityMenu):
-    pass
+    startIndex=entityMenu.startIndex
+
+    if startIndex==0:
+        pass
+    else:
+        entityMenu.startIndex=startIndex-1
+        entityMenu.endIndex=entityMenu.endIndex-1
+        entityMenu.updateCurrentSwitches(True)
 
 def downEntity(entityMenu):
+    endIndex = entityMenu.endIndex
+
+    if endIndex == len(entityMenu.switches):
+        pass
+    else:
+        entityMenu.endIndex = endIndex + 1
+        entityMenu.startIndex = entityMenu.startIndex + 1
+        entityMenu.updateCurrentSwitches(False)
+def mainMenuSwap(menu):
+    menu.renderMainSettings()
     pass
 
 def entitySwitch(menu):
+    pass
+
+def addEntity(menu):
+    pass
+
+def editEntity(menu):
+    pass
+
+def teleport(menu):
     pass

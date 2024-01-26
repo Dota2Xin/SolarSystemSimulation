@@ -42,7 +42,6 @@ class button:
         self.pressed=False
         self.color=[self.color[0]*1.5,self.color[1]*1.5,self.color[2]*1.5]
         self.buttonFunc(self.buttonFuncParams)
-        print("Working lolz")
 
     def render(self):
         invertColor = [255 - self.color[0], 255 - self.color[1], 255 - self.color[2]]

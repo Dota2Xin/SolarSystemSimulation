@@ -88,9 +88,91 @@ def createMainMenu(menu):
 def createEntityMenu(menu):
     buttonColor = (255, 255, 255)
 
-    entityPosition=[menu.width/10.0, menu.height/10.0]
-    entityMenu=entityMenuBox(buttonColor,entityPosition,[menu.height*(3.0/4.0), menu.width/2.0],menu,"entityMenu")
+    entityPosition=[menu.width/20.0, .02*menu.height]
+    entityMenu=entityMenuBox(buttonColor,entityPosition,[menu.height*(25.0/32.0), menu.width/2.0],menu,"entityMenu")
 
     menu.entityMenus.append(entityMenu)
 
+    #stuff for buttons
+    buttonColor = (255, 255, 255)
+
+    buttonY = int(menu.height * .85)
+    buttonX = int(menu.width * .45)
+
+    spacing = int(menu.width * .02)
+    buttonHeight = int(menu.height * .12)
+    buttonWidth = int(menu.width * .16)
+
+    teleportButton = button(buttonColor, (buttonX-2*buttonWidth-2*spacing, buttonY), (buttonHeight, buttonWidth), "Teleport",
+                        menu, teleport, menu, "teleportButton")
+    editButton= button(buttonColor, (buttonX-buttonWidth-spacing, buttonY), (buttonHeight, buttonWidth), "Edit",
+                         menu, editEntity, menu, "editButton")
+    addButton= button(buttonColor, (buttonX, buttonY), (buttonHeight, buttonWidth), "Add",
+                         menu, addEntity, menu, "addButton")
+    leaveButton = button(buttonColor, (buttonX + buttonWidth + spacing, buttonY), (buttonHeight, buttonWidth), "Exit",
+                         menu, leaveMenu, menu, "leaveButtonEntity")
+    mainButton = button(buttonColor, (buttonX + 2 * buttonWidth + 2 * spacing, buttonY), (buttonHeight, buttonWidth),
+                          "Main Menu", menu, mainMenuSwap, menu, "mainButton")
+
+    menu.buttons.append(leaveButton)
+    menu.buttons.append(mainButton)
+    menu.buttons.append(teleportButton)
+    menu.buttons.append(editButton)
+    menu.buttons.append(addButton)
+
+    #stuff for textboxes:
+    graphicsLabelY = menu.height * .02
+    graphicsLabelX = int(menu.width * .01)+menu.width/20.0+ menu.width/2.0
+    labelHeight = int(menu.height * .12)
+    labelWidth = int(menu.width * .12)
+
+    #position
+    positionLabelBox = textbox(menu.color, (graphicsLabelX, graphicsLabelY), (labelHeight, labelWidth), menu,
+                               "positionLabel", mutable=False, borderThickness=0, rightAligned=True)
+    positionLabelBox.text = "Position:"
+
+    elementWidth=menu.width*.23
+    positionValueBox = textbox(buttonColor, (graphicsLabelX+spacing+labelWidth, graphicsLabelY), (labelHeight, elementWidth), menu,
+                               "positionValues")
+
+    spacingY=labelHeight+menu.height*.03
+    #velocity
+    velocityLabelBox = textbox(menu.color, (graphicsLabelX, graphicsLabelY+ spacingY), (labelHeight, labelWidth), menu,
+                               "velocityLabel", mutable=False, borderThickness=0, rightAligned=True)
+    velocityLabelBox.text = "Velocity:"
+
+    velocityValueBox = textbox(buttonColor, (graphicsLabelX + spacing + labelWidth, graphicsLabelY+spacingY),
+                               (labelHeight, elementWidth), menu,
+                               "velocityValues")
+
+    # mass
+    massLabelBox = textbox(menu.color, (graphicsLabelX, graphicsLabelY + 2*spacingY),
+                               (labelHeight, labelWidth), menu,
+                               "massLabel", mutable=False, borderThickness=0, rightAligned=True)
+    massLabelBox.text = "Mass:"
+
+    massValueBox = textbox(buttonColor,
+                               (graphicsLabelX + spacing + labelWidth, graphicsLabelY + 2*spacingY),
+                               (labelHeight, elementWidth), menu,
+                               "massValues")
+
+    # Radius
+    radiusLabelBox = textbox(menu.color, (graphicsLabelX, graphicsLabelY + 3 * spacingY),
+                           (labelHeight, labelWidth), menu,
+                           "radiusLabel", mutable=False, borderThickness=0, rightAligned=True)
+    radiusLabelBox.text = "Radius:"
+
+    radiusValueBox = textbox(buttonColor,
+                           (graphicsLabelX + spacing + labelWidth, graphicsLabelY + 3 * spacingY),
+                           (labelHeight, elementWidth), menu,
+                           "radiusValues")
+
+    menu.textboxes.append(radiusValueBox)
+    menu.textboxes.append(radiusLabelBox)
+    menu.textboxes.append(massValueBox)
+    menu.textboxes.append(massLabelBox)
+    menu.textboxes.append(velocityValueBox)
+    menu.textboxes.append(velocityLabelBox)
+    menu.textboxes.append(positionValueBox)
+    menu.textboxes.append(positionLabelBox)
     pass

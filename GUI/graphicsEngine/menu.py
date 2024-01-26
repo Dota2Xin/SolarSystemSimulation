@@ -93,7 +93,6 @@ class menu:
         for button in self.buttons:
             if button.name in buttonNames:
                 self.currentButtons.append(button)
-                print("HERE WE Gz")
 
         textboxNames={"graphicsLabel":1, "fullscreenLabel":1, "simulationSettings":1, "simSpeedLabel":1, "cameraSpeedLabel":1, "cameraSpeed":1, "simSpeed":1, "collisionsLabel":1}
 
@@ -120,6 +119,19 @@ class menu:
         self.currentEntityMenus=[]
 
         self.currentEntityMenus.append(self.entityMenus[0])
+
+        buttonNames={"leaveButtonEntity":1, "mainButton":1, "teleportButton":1, "addButton":1, "editButton":1}
+
+        for button in self.buttons:
+            if button.name in buttonNames:
+                self.currentButtons.append(button)
+
+        textboxNames = {"positionLabel": 1, "positionValues": 1, "massLabel": 1, "massValues": 1,
+                        "velocityLabel": 1, "velocityValues": 1, "radiusValues": 1, "radiusLabel": 1}
+
+        for textbox in self.textboxes:
+            if textbox.name in textboxNames:
+                self.currentTextboxes.append(textbox)
         pass
 
     def controlTextboxKeydown(self, event):
@@ -160,6 +172,11 @@ class menu:
                 dropdown.checkInside(event.pos)
                 for dropdownButtons in dropdown.currentButtons:
                     dropdownButtons.checkInside(event.pos)
+            for entityMenuBox in self.currentEntityMenus:
+                entityMenuBox.upButton.checkInside(event.pos)
+                entityMenuBox.downButton.checkInside(event.pos)
+                for switchThing in entityMenuBox.switches:
+                    switchThing.checkInside(event.pos)
 
     def controlMouseButtonUp(self, event):
         self.typing = False
@@ -176,6 +193,20 @@ class menu:
                         dropdownButtons.unpressButton()
                 if dropdown.pressed:
                     dropdown.unpress()
+            for entityMenuBox in self.currentEntityMenus:
+                if entityMenuBox.upButton.pressed:
+                    entityMenuBox.upButton.unpressButton()
+                if entityMenuBox.downButton.pressed:
+                    entityMenuBox.downButton.unpressButton()
+                switchPressed=False
+                for switchThing in entityMenuBox.switches:
+                    if switchThing.pressed:
+                        switchPressed=True
+                for switchThing in entityMenuBox.switches:
+                    if switchThing.on and switchPressed:
+                        switchThing.switchOff()
+                    if switchThing.pressed and not switchThing.on:
+                        switchThing.unpressButton()
 
     def run(self):
         self.running=True

@@ -36,7 +36,7 @@ class entityMenuBox:
         self.downButton=button(self.color,(self.position[0],int(self.position[1]+self.height/2.0)),(int(self.height/2.0), int(self.width/8.0)),"D",self.menu,downEntity,self, "downButton")
         self.switches=self.initSwitches()
         self.startIndex=0
-        self.endIndex=10
+        self.endIndex=7
         if self.endIndex>len(self.switches):
             self.currentSwitches=self.switches
         else:
@@ -49,12 +49,22 @@ class entityMenuBox:
         i=0
         for name in self.menu.names:
             xPos=self.position[0]+self.upButton.width
-            yPos=self.position[1]+(i)*self.height/10.0
+            yPos=self.position[1]+(i)*self.height/7
             switchName=name
-            tempSwitch=switch(self.color, [xPos, yPos],(self.height/10.0,self.width*(7.0/8)),switchName, self.menu, entitySwitch,self.menu, switchName, borderThickness=1)
+            tempSwitch=switch(self.color, [xPos, yPos],(self.height/7,self.width*(7.0/8)),switchName, self.menu, entitySwitch,self.menu, switchName, borderThickness=1)
             switches.append(tempSwitch)
             i=i+1
         return switches
+
+    #Updates display based on whether up (direction=True) or down (direction=False) was pressed
+    def updateCurrentSwitches(self, direction):
+        if direction:
+            deltaY=self.height/7.0
+        else:
+            deltaY=-self.height/7.0
+        for switchThing in self.switches:
+            switchThing.position=[switchThing.position[0],switchThing.position[1]+deltaY]
+        self.currentSwitches=self.switches[self.startIndex:self.endIndex]
 
     def render(self):
         invertColor = [255 - self.color[0], 255 - self.color[1], 255 - self.color[2]]
