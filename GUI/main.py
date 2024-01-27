@@ -25,7 +25,7 @@ def main():
 
     cameraSpeed=100.0
 
-    currentSettings = {"fullscreen": False, "cameraSpeed": cameraSpeed, "simSpeed": timeScale, "collisions": False}
+    currentSettings = {"fullscreen": False, "cameraSpeed": cameraSpeed, "simSpeed": timeScale, "collisions": False, "currentPos":cameraPos, "lengthScale":100000}
 
     graphicsSettings={"cameraSpeed": cameraSpeed, "cameraSensitivity": .05, "cameraFrustumParams": [cameraPos,glm.vec3(0), [0.0,1.0,.5]]}
     #Initialize window
@@ -77,11 +77,13 @@ def main():
                     ###UPDATE CAMERA SETTINGS BEFORE DESTROY ENGINE
                     graphicsSettings = {"cameraSpeed": currentSettings["cameraSpeed"], "cameraSensitivity": .05,
                                         "cameraFrustumParams": [engine.camera.position, glm.vec3(0), [0.0, 1.0, .5]]}
+                    currentSettings["currentPos"]=engine.camera.position
                     cameraExtras=[engine.camera.pitch, engine.camera.yaw, engine.camera.forward, engine.camera.up, engine.camera.right]
                     engine.destroy()
                     tempMenu = menu(engine.winSize, currentSettings,currentState,names, textures, currentSettings['fullscreen'])
                     currentState, names, textures, currentSettings=tempMenu.run()
                     timeScale=currentSettings["simSpeed"]
+                    graphicsSettings["cameraFrustumParams"]=[currentSettings["currentPos"], glm.vec3(0), [0.0, 1.0, .5]]
                     #RESET CAMERA TO HAVE RIGHT SETTINGS
                     engine=graphicsEngine(graphicsSettings,names,currentState,textures, cameraExtras=cameraExtras, fullscreen=currentSettings["fullscreen"])
                     freeMouse = False

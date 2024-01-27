@@ -16,7 +16,7 @@ class sphere:
     Name- String corresponding to name of sphere
     context- Passes the context we're currently working with
     '''
-    def __init__(self, radius, position, engine,textureUnit=0, textureName="earth", resolution=32):
+    def __init__(self, radius, position, engine,textureUnit=0, textureName="earth", resolution=64):
         self.radius=radius
         self.position=position
         self.ctx=engine.ctx
@@ -98,10 +98,10 @@ class sphere:
 
         for i in range(latitudeSegments):
             if i!=0 and i!=latitudeSegments-1:
-                zeroIndex=(i-1)*32+1
+                zeroIndex=(i-1)*latitudeSegments+1
                 for j in range(longitudeSegments):
-                    triangle1=(zeroIndex+j,zeroIndex+j+32,zeroIndex+(j+1)%longitudeSegments)
-                    triangle2=(zeroIndex+j+32,zeroIndex+32+(j+1)%longitudeSegments,zeroIndex+(j+1)%longitudeSegments)
+                    triangle1=(zeroIndex+j,zeroIndex+j+latitudeSegments,zeroIndex+(j+1)%longitudeSegments)
+                    triangle2=(zeroIndex+j+latitudeSegments,zeroIndex+latitudeSegments+(j+1)%longitudeSegments,zeroIndex+(j+1)%longitudeSegments)
                     indices.append(triangle1)
                     indices.append(triangle2)
             else:
@@ -110,7 +110,7 @@ class sphere:
                         triangle=(0,1+j,1+(j+1)%longitudeSegments)
                         indices.append(triangle)
                 else:
-                    zeroIndex = (i - 1) * 32 + 1
+                    zeroIndex = (i - 1) * latitudeSegments + 1
                     for j in range(latitudeSegments):
                         triangle=(zeroIndex+j,zeroIndex+(j+1)%longitudeSegments,len(vertex)-1)
                         indices.append(triangle)

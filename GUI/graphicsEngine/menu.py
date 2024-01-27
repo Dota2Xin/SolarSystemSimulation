@@ -127,7 +127,8 @@ class menu:
                 self.currentButtons.append(button)
 
         textboxNames = {"positionLabel": 1, "positionValues": 1, "massLabel": 1, "massValues": 1,
-                        "velocityLabel": 1, "velocityValues": 1, "radiusValues": 1, "radiusLabel": 1}
+                        "velocityLabel": 1, "velocityValues": 1, "radiusValues": 1, "radiusLabel": 1,
+                        "textureLabel":1, "textureValues":1, "nameLabel":1, "nameValues":1, "addLabel":1}
 
         for textbox in self.textboxes:
             if textbox.name in textboxNames:
@@ -136,10 +137,28 @@ class menu:
 
     def controlTextboxKeydown(self, event):
         if self.typing:
+            shift = pg.key.get_mods() & pg.KMOD_SHIFT
             for textbox in self.textboxes:
                 if textbox.on:
                     currentStr = str(pg.key.name(event.key))
-                    if event.key == pg.K_SPACE:
+                    if shift:
+                        if event.key== pg.K_9:
+                            textbox.text = textbox.text[0:textbox.currentLocation] +"(" + textbox.text[
+                                                                                                  textbox.currentLocation:]
+                            textbox.currentLocation = textbox.currentLocation + 1
+                        elif event.key==pg.K_0:
+                            textbox.text = textbox.text[0:textbox.currentLocation] + ")" + textbox.text[
+                                                                                           textbox.currentLocation:]
+                            textbox.currentLocation = textbox.currentLocation + 1
+                        elif event.key==pg.K_LEFTBRACKET:
+                            textbox.text = textbox.text[0:textbox.currentLocation] + "{" + textbox.text[
+                                                                                           textbox.currentLocation:]
+                            textbox.currentLocation = textbox.currentLocation + 1
+                        elif event.key==pg.K_RIGHTBRACKET:
+                            textbox.text = textbox.text[0:textbox.currentLocation] + "}" + textbox.text[
+                                                                                           textbox.currentLocation:]
+                            textbox.currentLocation = textbox.currentLocation + 1
+                    elif event.key == pg.K_SPACE:
                         textbox.currentLocation = textbox.currentLocation + 1
                         textbox.text = textbox.text[0:textbox.currentLocation] + " " + textbox.text[
                                                                                        textbox.currentLocation:]
@@ -152,6 +171,18 @@ class menu:
                             textbox.text = textbox.text[0:textbox.currentLocation - 1] + textbox.text[
                                                                                          textbox.currentLocation:]
                             textbox.currentLocation = textbox.currentLocation - 1
+                    elif event.key==pg.K_COMMA:
+                        textbox.text = textbox.text[0:textbox.currentLocation] + "," + textbox.text[
+                                                                                       textbox.currentLocation:]
+                        textbox.currentLocation = textbox.currentLocation + 1
+                    elif event.key==pg.K_LEFTBRACKET:
+                        textbox.text = textbox.text[0:textbox.currentLocation] + "[" + textbox.text[
+                                                                                       textbox.currentLocation:]
+                        textbox.currentLocation = textbox.currentLocation + 1
+                    elif event.key==pg.K_RIGHTBRACKET:
+                        textbox.text = textbox.text[0:textbox.currentLocation] + "]" + textbox.text[
+                                                                                       textbox.currentLocation:]
+                        textbox.currentLocation = textbox.currentLocation + 1
                     elif len(currentStr) > 1:
                         currentStr = ""
                     else:

@@ -8,7 +8,7 @@ from GUI.graphicsEngine.switch import *
 
 class entityMenuBox:
 
-    def __init__(self, color,position, size, menu , name, borderThickness=2):
+    def __init__(self, color,position, size, menu , name, borderThickness=5):
         #position of top left of button
         self.borderThickness=borderThickness
         self.position=position
@@ -29,9 +29,6 @@ class entityMenuBox:
             self.textColor=[255,255,255]
 
         #State settings
-        self.pressed=False
-        self.on=False
-
         self.upButton=button(self.color,self.position,(int(self.height/2.0), int(self.width/8.0)),"U",self.menu,upEntity,self, "upButton")
         self.downButton=button(self.color,(self.position[0],int(self.position[1]+self.height/2.0)),(int(self.height/2.0), int(self.width/8.0)),"D",self.menu,downEntity,self, "downButton")
         self.switches=self.initSwitches()
@@ -51,9 +48,13 @@ class entityMenuBox:
             xPos=self.position[0]+self.upButton.width
             yPos=self.position[1]+(i)*self.height/7
             switchName=name
-            tempSwitch=switch(self.color, [xPos, yPos],(self.height/7,self.width*(7.0/8)),switchName, self.menu, entitySwitch,self.menu, switchName, borderThickness=1)
+            tempSwitch=switch(self.color, [xPos, yPos],(self.height/7,self.width*(7.0/8)),switchName, self.menu, entitySwitch,(self.menu, i, switchName), switchName, borderThickness=1)
             switches.append(tempSwitch)
             i=i+1
+        xPos = self.position[0] + self.upButton.width
+        yPos = self.position[1] + (i) * self.height / 7
+        tempSwitch=switch(self.color, [xPos, yPos],(self.height/7,self.width*(7.0/8)),"Add Entity", self.menu, addSwitch,self.menu, "add", borderThickness=1)
+        switches.append(tempSwitch)
         return switches
 
     #Updates display based on whether up (direction=True) or down (direction=False) was pressed

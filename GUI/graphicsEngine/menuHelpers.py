@@ -123,7 +123,7 @@ def createEntityMenu(menu):
     #stuff for textboxes:
     graphicsLabelY = menu.height * .02
     graphicsLabelX = int(menu.width * .01)+menu.width/20.0+ menu.width/2.0
-    labelHeight = int(menu.height * .12)
+    labelHeight = int(menu.height * .1)
     labelWidth = int(menu.width * .12)
 
     #position
@@ -135,7 +135,7 @@ def createEntityMenu(menu):
     positionValueBox = textbox(buttonColor, (graphicsLabelX+spacing+labelWidth, graphicsLabelY), (labelHeight, elementWidth), menu,
                                "positionValues")
 
-    spacingY=labelHeight+menu.height*.03
+    spacingY=labelHeight+menu.height*.020
     #velocity
     velocityLabelBox = textbox(menu.color, (graphicsLabelX, graphicsLabelY+ spacingY), (labelHeight, labelWidth), menu,
                                "velocityLabel", mutable=False, borderThickness=0, rightAligned=True)
@@ -167,6 +167,34 @@ def createEntityMenu(menu):
                            (labelHeight, elementWidth), menu,
                            "radiusValues")
 
+    #Textboxes for params only for adding stuff:
+    addLabelBox = textbox(menu.color, (graphicsLabelX, graphicsLabelY +3.8 * spacingY),
+                             (labelHeight, labelWidth), menu,
+                             "addLabel", mutable=False, borderThickness=0, rightAligned=True)
+    addLabelBox.text = "Add Params:"
+
+    #texture
+    textureLabelBox = textbox(menu.color, (graphicsLabelX, graphicsLabelY + 4.5 * spacingY),
+                             (labelHeight, labelWidth), menu,
+                             "textureLabel", mutable=False, borderThickness=0, rightAligned=True)
+    textureLabelBox.text = "Texture:"
+
+    textureValueBox = textbox(buttonColor,
+                             (graphicsLabelX + spacing + labelWidth, graphicsLabelY + 4.5 * spacingY),
+                             (labelHeight, elementWidth), menu,
+                             "textureValues")
+
+    #name
+    nameLabelBox = textbox(menu.color, (graphicsLabelX, graphicsLabelY + 5.5 * spacingY),
+                              (labelHeight, labelWidth), menu,
+                              "nameLabel", mutable=False, borderThickness=0, rightAligned=True)
+    nameLabelBox.text = "Name:"
+
+    nameValueBox = textbox(buttonColor,
+                              (graphicsLabelX + spacing + labelWidth, graphicsLabelY + 5.5 * spacingY),
+                              (labelHeight, elementWidth), menu,
+                              "nameValues")
+
     menu.textboxes.append(radiusValueBox)
     menu.textboxes.append(radiusLabelBox)
     menu.textboxes.append(massValueBox)
@@ -175,4 +203,9 @@ def createEntityMenu(menu):
     menu.textboxes.append(velocityLabelBox)
     menu.textboxes.append(positionValueBox)
     menu.textboxes.append(positionLabelBox)
+    menu.textboxes.append(nameValueBox)
+    menu.textboxes.append(nameLabelBox)
+    menu.textboxes.append(textureValueBox)
+    menu.textboxes.append(textureLabelBox)
+    menu.textboxes.append(addLabelBox)
     pass
