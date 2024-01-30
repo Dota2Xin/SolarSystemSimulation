@@ -135,6 +135,31 @@ class menu:
                 self.currentTextboxes.append(textbox)
         pass
 
+    @staticmethod
+    def standardKeydownOperations(textbox, currentStr, event, shifted):
+        if shifted:
+            currentStr=currentStr.upper()
+        if event.key == pg.K_SPACE:
+            textbox.currentLocation = textbox.currentLocation + 1
+            textbox.text = textbox.text[0:textbox.currentLocation] + " " + textbox.text[
+                                                                           textbox.currentLocation:]
+        elif event.key == pg.K_RIGHT:
+            textbox.currentLocation = textbox.currentLocation + 1
+        elif event.key == pg.K_LEFT:
+            textbox.currentLocation = textbox.currentLocation - 1
+        elif event.key == pg.K_BACKSPACE and textbox.currentLocation != 0:
+            if currentStr != "":
+                textbox.text = textbox.text[0:textbox.currentLocation - 1] + textbox.text[
+                                                                             textbox.currentLocation:]
+                textbox.currentLocation = textbox.currentLocation - 1
+        elif len(currentStr) > 1:
+            currentStr = ""
+        else:
+            textbox.text = textbox.text[0:textbox.currentLocation] + currentStr + textbox.text[
+                                                                                  textbox.currentLocation:]
+            if currentStr != "":
+                textbox.currentLocation = textbox.currentLocation + 1
+
     def controlTextboxKeydown(self, event):
         if self.typing:
             shift = pg.key.get_mods() & pg.KMOD_SHIFT
@@ -158,19 +183,9 @@ class menu:
                             textbox.text = textbox.text[0:textbox.currentLocation] + "}" + textbox.text[
                                                                                            textbox.currentLocation:]
                             textbox.currentLocation = textbox.currentLocation + 1
-                    elif event.key == pg.K_SPACE:
-                        textbox.currentLocation = textbox.currentLocation + 1
-                        textbox.text = textbox.text[0:textbox.currentLocation] + " " + textbox.text[
-                                                                                       textbox.currentLocation:]
-                    elif event.key == pg.K_RIGHT:
-                        textbox.currentLocation = textbox.currentLocation + 1
-                    elif event.key == pg.K_LEFT:
-                        textbox.currentLocation = textbox.currentLocation - 1
-                    elif event.key == pg.K_BACKSPACE:
-                        if currentStr != "":
-                            textbox.text = textbox.text[0:textbox.currentLocation - 1] + textbox.text[
-                                                                                         textbox.currentLocation:]
-                            textbox.currentLocation = textbox.currentLocation - 1
+                        else:
+                            self.standardKeydownOperations(textbox,currentStr,event,True)
+
                     elif event.key==pg.K_COMMA:
                         textbox.text = textbox.text[0:textbox.currentLocation] + "," + textbox.text[
                                                                                        textbox.currentLocation:]
@@ -183,13 +198,8 @@ class menu:
                         textbox.text = textbox.text[0:textbox.currentLocation] + "]" + textbox.text[
                                                                                        textbox.currentLocation:]
                         textbox.currentLocation = textbox.currentLocation + 1
-                    elif len(currentStr) > 1:
-                        currentStr = ""
                     else:
-                        textbox.text = textbox.text[0:textbox.currentLocation] + currentStr + textbox.text[
-                                                                                              textbox.currentLocation:]
-                        if currentStr != "":
-                            textbox.currentLocation = textbox.currentLocation + 1
+                        self.standardKeydownOperations(textbox,currentStr,event, False)
 
     def controlMouseButtonDown(self, event):
         self.typing = False

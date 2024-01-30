@@ -1,4 +1,5 @@
 import numpy as np
+from GUI.graphicsEngine.switch import *
 
 def changeColor(menu):
     menu.color=[255-menu.color[0],255-menu.color[1],255-menu.color[2]]
@@ -133,6 +134,8 @@ def editEntity(menu):
         newVelocities=[]
         mass=0
         radius=0
+        name=menu.entityMenus[0].onSwitch.name
+        texture=menu.textures[menu.names[name]]
         for textbox in menu.currentTextboxes:
             if textbox.name=="positionValues":
                 newPosition=parseDynamicString(textbox.text)
@@ -142,9 +145,13 @@ def editEntity(menu):
                 radius=float(textbox.text.replace(" ", ""))
             elif textbox.name=="massValues":
                 mass=float(textbox.text.replace(" ", ""))
+            elif textbox.name=="textureValues":
+                if textbox.text!="":
+                    texture=textbox.text.replace(" ", "").lower()
         newState=[newPosition[0],newPosition[1],newPosition[2], newVelocities[0], newVelocities[1], newVelocities[2], mass, radius]
         objectName=menu.entityMenus[0].onSwitch.name
         objectIndex=menu.names[objectName]
+        menu.textures[objectIndex]=texture
         menu.currentState[objectIndex]=newState
     else:
         pass
@@ -160,27 +167,44 @@ def addEntity(menu):
         radius = 0
         name=""
         texture=""
+        good=True
         for textbox in menu.currentTextboxes:
-            if textbox.name == "positionValues":
-                newPosition = parseDynamicString(textbox.text)
-            elif textbox.name == "velocityValues":
-                newVelocities = parseDynamicString(textbox.text)
-            elif textbox.name == "radiusValues":
-                radius = float(textbox.text.replace(" ", ""))
-            elif textbox.name == "massValues":
-                mass = float(textbox.text.replace(" ", ""))
-            elif textbox.name=="nameValues":
-                name=textbox.text
-            elif textbox.name=="textureValues":
-                texture=textbox.text.replace(" ", "").lower()
-        if name in menu.names or name=="add":
-            pass
-        else:
-            newState = [newPosition[0], newPosition[1], newPosition[2], newVelocities[0], newVelocities[1],
-                        newVelocities[2], mass, radius]
-            menu.currentState=np.concatenate((menu.currentState,np.asarray([newState])),axis=0)
-            menu.names[name]=len(menu.currentState)-1
-            menu.textures.append(texture)
+            try:
+                if textbox.name == "positionValues":
+                    newPosition = parseDynamicString(textbox.text)
+                elif textbox.name == "velocityValues":
+                    newVelocities = parseDynamicString(textbox.text)
+                elif textbox.name == "radiusValues":
+                    radius = float(textbox.text.replace(" ", ""))
+                elif textbox.name == "massValues":
+                    mass = float(textbox.text.replace(" ", ""))
+                elif textbox.name=="nameValues":
+                    name=textbox.text
+                elif textbox.name=="textureValues":
+                    texture=textbox.text.replace(" ", "").lower()
+            except:
+                textbox.text="Value Error"
+                good=False
+                break
+        if good:
+            if (name.lower() in (key.lower() for key in menu.names)) or name=="add":
+                for textbox in menu.currentTextboxes:
+                    if textbox.name=="nameValues":
+                        textbox.text="Err:Name in Use"
+                pass
+            else:
+                newState = [newPosition[0], newPosition[1], newPosition[2], newVelocities[0], newVelocities[1],
+                            newVelocities[2], mass, radius]
+                menu.currentState=np.concatenate((menu.currentState,np.asarray([newState])),axis=0)
+                menu.names[name]=len(menu.currentState)-1
+                menu.textures.append(texture)
+                switches=menu.entityMenus[0].switches
+                switchPos=switches[-1].position
+                tempSwitch=switch((255,255,255), switchPos, (switches[0].height, switches[0].width), name, menu, entitySwitch,(menu, len(switches)-2, name),name,borderThickness=1)
+                menu.entityMenus[0].switches.insert(len(switches)-1, tempSwitch)
+                menu.entityMenus[0].switches[-1].position=[switchPos[0],switchPos[1]+switches[0].height]
+                upEntity(menu.entityMenus[0])
+                downEntity(menu.entityMenus[0])
     else:
         pass
 
