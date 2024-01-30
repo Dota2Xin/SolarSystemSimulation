@@ -5,7 +5,7 @@ from numba import jit
 #State is formatted as an array with [[x,y,z, vx,vy,vz, mass, radius],...,...,...]
 @njit
 def dkdLeapfrogStep(state, timeStep):
-    updatedState = np.zeros_like(state)  # Use NumPy arrays for better performance
+    updatedState = np.zeros_like(state)
     G = 6.67430 * (10**-11)
 
     for i in range(len(state)):
