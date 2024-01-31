@@ -1,5 +1,6 @@
 import pygame as pg
 from src.numerics import dkdLeapfrogIntegrator as lf
+from src.numerics import collisionCalculator as cc
 from GUI.graphicsEngine.engine import graphicsEngine
 import numpy as np
 import glm
@@ -23,13 +24,13 @@ def main():
     radiusScaleFactor=0
     cameraPos=[currentState[0][0]/lengthScaleFactor,currentState[0][1]/lengthScaleFactor,currentState[0][2]/lengthScaleFactor]
 
-    cameraSpeed=100.0
+    cameraSpeed=10.0
 
     currentSettings = {"fullscreen": False, "cameraSpeed": cameraSpeed, "simSpeed": timeScale, "collisions": False, "currentPos":cameraPos, "lengthScale":100000}
 
     graphicsSettings={"cameraSpeed": cameraSpeed, "cameraSensitivity": .05, "cameraFrustumParams": [cameraPos,glm.vec3(0), [0.0,1.0,.5]]}
     #Initialize window
-    engine=graphicsEngine(graphicsSettings,names, currentState, textures,fullscreen=currentSettings['fullscreen'])
+    engine=graphicsEngine(graphicsSettings,names, currentState, textures,lengthScaleFactor, fullscreen=currentSettings['fullscreen'])
     deltaTime=engine.clock.tick(60)*.001
     pg.event.set_grab(True)
     pg.mouse.set_visible(False)
@@ -50,6 +51,7 @@ def main():
             currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime*timeScale))
         '''
         currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * timeScale))
+        currentState=np.asarray(cc.collisionCalculator(currentState))
         engine.updatePositions(names,currentState, lengthScaleFactor)
         engine.render()
         engine.camera.update(deltaTime)
@@ -63,7 +65,7 @@ def main():
                 elif event.key==pg.K_i:
                     currentPos=engine.camera.position+engine.camera.forward
                     objCount = objCount+1
-                    currentState=controlEntities.addObject(f"Sphere{objCount}", [currentPos[0], currentPos[1], currentPos[2], 0.0,0.0,0.0,1000,1.0], engine, currentState, names, textures)
+                    currentState=controlEntities.addObject(f"Sphere{objCount}", [currentPos[0], currentPos[1], currentPos[2], 0.0,0.0,0.0,1000,1.0], engine, currentState, names, textures, lengthScaleFactor)
                 if event.key==pg.K_y:
                     print(engine.camera.position)
                 if event.key==pg.K_f:
@@ -85,7 +87,7 @@ def main():
                     timeScale=currentSettings["simSpeed"]
                     graphicsSettings["cameraFrustumParams"]=[currentSettings["currentPos"], glm.vec3(0), [0.0, 1.0, .5]]
                     #RESET CAMERA TO HAVE RIGHT SETTINGS
-                    engine=graphicsEngine(graphicsSettings,names,currentState,textures, cameraExtras=cameraExtras, fullscreen=currentSettings["fullscreen"])
+                    engine=graphicsEngine(graphicsSettings,names,currentState,textures,lengthScaleFactor, cameraExtras=cameraExtras, fullscreen=currentSettings["fullscreen"])
                     freeMouse = False
                     pg.mouse.set_visible(False)
                     pg.event.set_grab(True)

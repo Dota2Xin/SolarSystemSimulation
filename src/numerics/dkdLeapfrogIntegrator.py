@@ -6,6 +6,7 @@ from numba import jit
 @njit
 def dkdLeapfrogStep(state, timeStep):
     updatedState = np.zeros_like(state)
+    #scale G up by 10^5 for ease of use
     G = 6.67430 * (10**-11)
 
     for i in range(len(state)):

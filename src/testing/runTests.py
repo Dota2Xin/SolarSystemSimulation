@@ -1,7 +1,8 @@
 import dkdLeapfrogTests
+import collisionTests
 
 def main():
-    dkdLeapfrogTests.testEarthJupiterSun()
+    collisionTests.testSlightlyMore2D()
 
 if __name__=='__main__':
     main()

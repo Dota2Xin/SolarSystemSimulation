@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from src.numerics.dkdLeapfrogIntegrator import *
+from src.numerics.collisionCalculator import *
 
 def testInitialConditionNumerically(solution,initialState,steps, finalTime, relative=True):
     #Calculates the data for our current test
@@ -70,7 +71,9 @@ def testInitialConditionQualitatively(initialState,steps, finalTime):
     for i in range(steps-1):
         currentTime=currentTime+timeStep
         passedArray=numericData[-1]
-        numericData.append(dkdLeapfrogStep(passedArray,timeStep))
+        newState=dkdLeapfrogStep(passedArray,timeStep)
+        newState=collisionCalculator(newState)
+        numericData.append(newState)
     #starts by processing it into (x,y) for both sets of data
     plt.figure()
     for j in range(len(initialState)):

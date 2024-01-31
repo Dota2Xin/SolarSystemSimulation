@@ -7,7 +7,7 @@ from .camera import *
 from .menu import *
 
 class graphicsEngine:
-    def __init__(self,graphicsSettings,names, currentState, textures, winSize=[1300,700], cameraExtras=[], fullscreen=False):
+    def __init__(self,graphicsSettings,names, currentState, textures,lengthScale, winSize=[1300,700], cameraExtras=[], fullscreen=False):
         pg.init()
         self.winSize=winSize
         #tell pg what openGL to use
@@ -35,12 +35,12 @@ class graphicsEngine:
             self.camera=camera([50,.1,100000],cameraParams, self.winSize, speedParams)
         #scene
         self.scene={}
-        self.createScene(names,currentState, textures)
+        self.createScene(names,currentState, textures, lengthScale)
         self.skybox = cube(49999, self.camera.position, self,textureName="hipp8")
 
-    def createScene(self,names, currentState, textures):
+    def createScene(self,names, currentState, textures, lengthScale):
         for name in names:
-            self.scene[name]=sphere(currentState[names[name]][-1],currentState[names[name]][0:3],self,textureUnit=names[name]+1, textureName=textures[names[name]])
+            self.scene[name]=sphere(currentState[names[name]][-1]/lengthScale,currentState[names[name]][0:3]/lengthScale,self,textureUnit=names[name]+1, textureName=textures[names[name]])
 
     def updatePositions(self, positionNames, positionVals, lengthScaleFactor):
         for obj in positionNames:
@@ -48,8 +48,8 @@ class graphicsEngine:
             self.scene[obj].update(position)
         self.skybox.update(self.camera.position)
 
-    def addRegularPlanet(self, position, radius, name, textureIndex=0, texture="earth"):
-        self.scene[name]=sphere(radius, position, self,textureUnit=textureIndex+1, textureName=texture)
+    def addRegularPlanet(self, position, radius, name,lengthScale, textureIndex=0, texture="earth"):
+        self.scene[name]=sphere(radius/lengthScale, position, self,textureUnit=textureIndex+1, textureName=texture)
 
     def updateScreenWindowed(self, winSize):
         self.winSize=winSize
