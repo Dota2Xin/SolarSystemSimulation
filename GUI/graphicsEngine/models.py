@@ -157,7 +157,7 @@ class cube:
         context- Passes the context we're currently working with
         '''
 
-    def __init__(self, sideLength, position, engine, textureUnit=0, textureName="earth", resolution=32):
+    def __init__(self, sideLength, position, engine, textureUnit=0, textureName="earth", resolution=100):
         self.sideLength = sideLength
         self.position = position
         self.ctx = engine.ctx

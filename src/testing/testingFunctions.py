@@ -59,7 +59,6 @@ def testInitialConditionNumerically(solution,initialState,steps, finalTime, rela
     plt.tight_layout()
     plt.show()
 
-
 def testInitialConditionQualitatively(initialState,steps, finalTime):
     #Calculates the data for our current test
     numericData=[]
@@ -68,20 +67,23 @@ def testInitialConditionQualitatively(initialState,steps, finalTime):
     numericData.append(initialState)
     currentTime=0
     timeData=np.linspace(0,finalTime,steps)
+    print("START")
     for i in range(steps-1):
         currentTime=currentTime+timeStep
         passedArray=numericData[-1]
         newState=dkdLeapfrogStep(passedArray,timeStep)
         newState=collisionCalculator(newState)
         numericData.append(newState)
+
+    print("FINISH")
     #starts by processing it into (x,y) for both sets of data
     plt.figure()
     for j in range(len(initialState)):
         xDataNumeric=[]
         yDataNumeric=[]
-        for i in range(len(numericData)):
-            xDataNumeric.append(numericData[i][j][0])
-            yDataNumeric.append(numericData[i][j][1])
+        for i in range(int(len(numericData)/10)):
+            xDataNumeric.append(numericData[i*10][j][0])
+            yDataNumeric.append(numericData[i*10][j][1])
         #plots the data
         plt.plot(xDataNumeric,yDataNumeric, label=f"Numeric Data OBJ:{j}")
         plt.legend()

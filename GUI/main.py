@@ -6,11 +6,12 @@ import numpy as np
 import glm
 import controlEntities
 from GUI import solarSystemData
+import time
 from GUI.graphicsEngine.menu import menu
 
 def main():
     #Params
-    timeScale=1000.0 #describes the correspondence between real time and sim time
+    timeScale=1.0 #describes the correspondence between real time and sim time
     #Initialize this to solar system
     #describes the current state numerically
     currentState=np.asarray([[-1.0,0.0,0.0,.0000913393398,.0001582044,0.0,1000,.5],[1.0,0.0,0.0,.0000913393398,-.0001582044,0.0,1000,.5], [0.0,-1.732,0.0,-.00018267868,0.0,0.0,1000,.5]])
@@ -20,11 +21,11 @@ def main():
     #print(currentState)
     #Dictionary that contains the full state of the solar system, references to physical data, as well as graphics data
     mathematicalPositions=[]
-    lengthScaleFactor=100000
+    lengthScaleFactor=10000000
     radiusScaleFactor=0
     cameraPos=[currentState[0][0]/lengthScaleFactor,currentState[0][1]/lengthScaleFactor,currentState[0][2]/lengthScaleFactor]
 
-    cameraSpeed=10.0
+    cameraSpeed=1000.0
 
     currentSettings = {"fullscreen": False, "cameraSpeed": cameraSpeed, "simSpeed": timeScale, "collisions": False, "currentPos":cameraPos, "lengthScale":100000}
 
@@ -37,7 +38,7 @@ def main():
     freeMouse=False
     run=True
     objCount=len(currentState)
-
+    print(currentState)
     while run:
         timeStep=timeScale
         '''
@@ -51,6 +52,7 @@ def main():
             currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime*timeScale))
         '''
         currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * timeScale))
+
         currentState=np.asarray(cc.collisionCalculator(currentState))
         engine.updatePositions(names,currentState, lengthScaleFactor)
         engine.render()
@@ -103,3 +105,17 @@ if __name__=='__main__':
         main()
     finally:
         pg.quit()
+
+
+
+#timeStep=timeScale
+        '''
+        Some logic for when timescales become more important
+        if timeScale>=10000:
+            while timeStep>10000:
+                currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * 10000))
+                timeStep=timeStep-10000
+            currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * timeStep))
+        else:
+            currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime*timeScale))
+        '''

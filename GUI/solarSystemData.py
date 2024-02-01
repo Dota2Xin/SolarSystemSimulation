@@ -15,7 +15,7 @@ def getSolarSystemData():
     count=0
     textures=[]
     for object in objectList:
-        currentObject=np.asarray(getObjectData(object[1])+[float(object[3])/(10**5)]+[float(object[4])/100])
+        currentObject=np.asarray(getObjectData(object[1])+[float(object[3])]+[float(object[4])*10])
         stateArray.append(currentObject)
         names[object[0]]=count
         textures.append(object[2])
@@ -52,4 +52,4 @@ def getObjectData(command):
     dataText=data.text
     position=(getVar(dataText,"X "), getVar(dataText,"Y "), getVar(dataText, "Z "))
     velocity=(getVar(dataText, "VX"), getVar(dataText, "VY"), getVar(dataText, "VZ"))
-    return [position[0],position[1],position[2], velocity[0], velocity[1], velocity[2]]
+    return [position[0]*1000,position[1]*1000,position[2]*1000, velocity[0]*1000, velocity[1]*1000, velocity[2]*1000]
