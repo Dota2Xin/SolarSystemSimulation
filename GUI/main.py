@@ -7,11 +7,26 @@ import glm
 import controlEntities
 from GUI import solarSystemData
 import time
+from numba import njit
 from GUI.graphicsEngine.menu import menu
+@njit
+def calcFullTimeStep(currentState,timeStep, deltaTime, timeScale):
+    tempArray=currentState[:]
+    if timeScale >= 5000:
+        while timeStep > 5000:
+            tempArray = np.asarray(lf.dkdLeapfrogStep(tempArray, deltaTime * 5000))
+            tempArray = np.asarray(cc.collisionCalculator(tempArray))
+            timeStep = timeStep - 5000
+        tempArray= np.asarray(lf.dkdLeapfrogStep(tempArray, deltaTime * timeStep))
+        tempArray=np.asarray(cc.collisionCalculator(tempArray))
+    else:
+        tempArray = np.asarray(lf.dkdLeapfrogStep(tempArray, deltaTime * timeScale))
+        tempArray = np.asarray(cc.collisionCalculator(tempArray))
+    return tempArray
 
 def main():
     #Params
-    timeScale=1.0 #describes the correspondence between real time and sim time
+    timeScale=5000.0 #describes the correspondence between real time and sim time
     #Initialize this to solar system
     #describes the current state numerically
     currentState=np.asarray([[-1.0,0.0,0.0,.0000913393398,.0001582044,0.0,1000,.5],[1.0,0.0,0.0,.0000913393398,-.0001582044,0.0,1000,.5], [0.0,-1.732,0.0,-.00018267868,0.0,0.0,1000,.5]])
@@ -21,13 +36,13 @@ def main():
     #print(currentState)
     #Dictionary that contains the full state of the solar system, references to physical data, as well as graphics data
     mathematicalPositions=[]
-    lengthScaleFactor=10000000
+    lengthScaleFactor=100000000
     radiusScaleFactor=0
     cameraPos=[currentState[0][0]/lengthScaleFactor,currentState[0][1]/lengthScaleFactor,currentState[0][2]/lengthScaleFactor]
 
-    cameraSpeed=1000.0
+    cameraSpeed=100.0
 
-    currentSettings = {"fullscreen": False, "cameraSpeed": cameraSpeed, "simSpeed": timeScale, "collisions": False, "currentPos":cameraPos, "lengthScale":100000}
+    currentSettings = {"fullscreen": False, "cameraSpeed": cameraSpeed, "simSpeed": timeScale, "collisions": False, "currentPos":cameraPos, "lengthScale":lengthScaleFactor}
 
     graphicsSettings={"cameraSpeed": cameraSpeed, "cameraSensitivity": .05, "cameraFrustumParams": [cameraPos,glm.vec3(0), [0.0,1.0,.5]]}
     #Initialize window
@@ -38,7 +53,6 @@ def main():
     freeMouse=False
     run=True
     objCount=len(currentState)
-    print(currentState)
     while run:
         timeStep=timeScale
         '''
@@ -51,9 +65,9 @@ def main():
         else:
             currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime*timeScale))
         '''
-        currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * timeScale))
-
-        currentState=np.asarray(cc.collisionCalculator(currentState))
+        #currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * timeScale))
+        currentState=calcFullTimeStep(currentState,timeStep, deltaTime,timeScale)
+        #currentState=np.asarray(cc.collisionCalculator(currentState))
         engine.updatePositions(names,currentState, lengthScaleFactor)
         engine.render()
         engine.camera.update(deltaTime)

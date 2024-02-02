@@ -81,9 +81,9 @@ def testInitialConditionQualitatively(initialState,steps, finalTime):
     for j in range(len(initialState)):
         xDataNumeric=[]
         yDataNumeric=[]
-        for i in range(int(len(numericData)/10)):
-            xDataNumeric.append(numericData[i*10][j][0])
-            yDataNumeric.append(numericData[i*10][j][1])
+        for i in range(int(len(numericData))):
+            xDataNumeric.append(numericData[i][j][0])
+            yDataNumeric.append(numericData[i][j][1])
         #plots the data
         plt.plot(xDataNumeric,yDataNumeric, label=f"Numeric Data OBJ:{j}")
         plt.legend()

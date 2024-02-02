@@ -30,9 +30,9 @@ class graphicsEngine:
         cameraParams=graphicsSettings["cameraFrustumParams"]
         speedParams=[graphicsSettings["cameraSpeed"], graphicsSettings["cameraSensitivity"]]
         if cameraExtras !=[]:
-            self.camera=camera([50,.1,100000],cameraParams, self.winSize, speedParams,cameraExtras=cameraExtras)
+            self.camera=camera([50,.01,100000],cameraParams, self.winSize, speedParams,cameraExtras=cameraExtras)
         else:
-            self.camera=camera([50,.1,100000],cameraParams, self.winSize, speedParams)
+            self.camera=camera([50,.01,100000],cameraParams, self.winSize, speedParams)
         #scene
         self.scene={}
         self.createScene(names,currentState, textures, lengthScale)
