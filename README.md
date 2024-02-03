@@ -31,12 +31,17 @@ The advantage of this scheme is that it is symmetric which means if we let our e
 We also have collisions included in the simulation. For this we just assume that the collision between our two bodies happens elastically and then just use the formulas for an elastic collision between two bodies (you can find these on wikipedia if you want). Actually modelling the collisions between two celestial bodies is an incredibly computationally taxing and interesting problem that research still gets done on which is why it is not included here.
 
 <h3>Works in Progress</h3>
-1. As mentioned above the enabling and disabling of collisions and fullscreen are still being polished. 
+
+1. As mentioned above the enabling and disabling of collisions and fullscreen are still being polished.
+ 
 2. Working on adding a whole host of bodies such as asteroids, Saturn's rings and a few satellites and telescopes that humanity has launched.
+ 
 3. Creating a barebones UI that allows users to specify arbitrary initial conditions that will evolve them numerically, basically allowing users to do large N-body gravity simulations
+  
 4. Making the program an executable of some sort.
 
 <h3>Notes and Resources</h3>
 Planet textures are from NASA as is the background image of space and the data of the planets. The 3D graphics engine was made using a combination of PyGLM, modernGL, and PyGame. Numpy and Numba are both used in performing and speeding up calculations. Feel free to use this for whatever, especially anything physics educational (I have no idea how to add one of those license things and it seems boring to learn right now...). 
+
 
 Author: Gabriel Kumar
