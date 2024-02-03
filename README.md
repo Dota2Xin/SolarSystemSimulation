@@ -16,13 +16,13 @@ Teleporting: You can also select an object and click teleport so that when you e
 (WIP): Working on allowing users to enable/disable collisions and fullscreen
 
 <h3>Simulation Explanation</h3>
-The simulation does an $O(N^2)$ gravity calculation and then integrates using a leapfrog technique, the largest times scaling allowed is 5000*realTime any larger than this and the simulation will just while loop through your timestep in these chunks. The purpose of this is to preserve accuracy. The leapfrog integration we use is drift-kick-drift. The scheme for going from some position $\bold{r}_n$ and velocity $\bold{v}_n$ to updated $\bold{r}_{n+1}$ and $\bold{v}_{n+1}$ after a timestep $h$ with acceleration determined by $f(\bold{r})$ is layed out below: 
+The simulation does an $O(N^2)$ gravity calculation and then integrates using a leapfrog technique, the largest times scaling allowed is 5000*realTime any larger than this and the simulation will just while loop through your timestep in these chunks. The purpose of this is to preserve accuracy. The leapfrog integration we use is drift-kick-drift. The scheme for going from some position $\vec{r}_n$ and velocity $\vec{v}_n$ to updated $\vec{r}_{n+1}$ and $\vec{v}_{n+1}$ after a timestep $h$ with acceleration determined by $f(\vec{r})$ is layed out below: 
 
-$$\bold{r}_{n+1/2}=\bold{r}_n+\bold{v}\frac{h}{2}$$
+$$\vec{r}_{n+1/2}=\vec{r}_n+\vec{v}\frac{h}{2}$$
 
-$$\bold{v}_{n+1}=\bold{v}_n+hf(\bold{r}_n)$$
+$$\vec{v}_{n+1}=\vec{v}_n+hf(\vec{r}_n)$$
 
-$$\bold{r}_{n+1}=\bold{r}_{n+1/2}+\bold{v}_{n+1}\frac{h}{2}$$
+$$\vec{r}_{n+1}=\vec{r}_{n+1/2}+\vec{v}_{n+1}\frac{h}{2}$$
 
 The advantage of this scheme is that it is symmetric which means if we let our evolution operator be represented by $\Gamma(h)$ that $\Gamma(-h)=\Gamma^{-1}(h)$. If we let $\mathrm{T}$ represent the time reversal operator that our scheme is normal which means $\mathrm{T}\Gamma(h)=\Gamma(-h)\mathrm{T}$. These are both conditions that we know hold for the exact solution of our ODE so when we force our numerical scheme to respect them we are able to respect the structure of our equations in some sense. To be more precise these conditions to ensure that our time evolution is handled respectfully allow us to stay on (or near) the symplectic manifold which our exact solution exists on thus preserving our energy better and giving us stability in long-time integrations (If you want to learn more about this view of Classical Mechanics Jose and Saletan's textbook is a great resource).
 
