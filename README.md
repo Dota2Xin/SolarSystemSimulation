@@ -24,7 +24,7 @@ $$\vec{r}_{n+1/2}=\vec{r}_n+\vec{v}\frac{h}{2}$$
 
 $$\vec{v}_{n+1}=\vec{v}_n+hf(\vec{r}_n)$$
 
-$$\vec{r}_{n+1/2}=\vec{r}_n+\vec{v}\frac{h}{2}$$
+$$\vec{r}_{n}=\vec{v}_{n+1}+\vec{v}_{n+1}\frac{h}{2}$$
 
 The advantage of this scheme is that it is symmetric which means if we let our evolution operator be represented by $\Gamma(h)$ that $\Gamma(-h)=\Gamma^{-1}(h)$. If we let $\mathrm{T}$ represent the time reversal operator that our scheme is normal which means $\mathrm{T}\Gamma(h)=\Gamma(-h)\mathrm{T}$. These are both conditions that we know hold for the exact solution of our ODE so when we force our numerical scheme to respect them we are able to respect the structure of our equations in some sense. To be more precise these conditions to ensure that our time evolution is handled respectfully allow us to stay on (or near) the symplectic manifold which our exact solution exists on thus preserving our energy better and giving us stability in long-time integrations (If you want to learn more about this view of Classical Mechanics Jose and Saletan's textbook is a great resource).
 
