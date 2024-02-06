@@ -24,6 +24,18 @@ def calcFullTimeStep(currentState,timeStep, deltaTime, timeScale):
         tempArray = np.asarray(cc.collisionCalculator(tempArray))
     return tempArray
 
+@njit
+def calcFullTimeStepNoCollisions(currentState,timeStep, deltaTime, timeScale):
+    tempArray = currentState[:]
+    if timeScale >= 5000:
+        while timeStep > 5000:
+            tempArray = np.asarray(lf.dkdLeapfrogStep(tempArray, deltaTime * 5000))
+            timeStep = timeStep - 5000
+        tempArray = np.asarray(lf.dkdLeapfrogStep(tempArray, deltaTime * timeStep))
+    else:
+        tempArray = np.asarray(lf.dkdLeapfrogStep(tempArray, deltaTime * timeScale))
+    return tempArray
+
 def main():
     #Params
     timeScale=5000.0 #describes the correspondence between real time and sim time
@@ -42,7 +54,7 @@ def main():
 
     cameraSpeed=100.0
 
-    currentSettings = {"fullscreen": False, "cameraSpeed": cameraSpeed, "simSpeed": timeScale, "collisions": False, "currentPos":cameraPos, "lengthScale":lengthScaleFactor}
+    currentSettings = {"fullscreen": False, "cameraSpeed": cameraSpeed, "simSpeed": timeScale, "collisions": True, "currentPos":cameraPos, "lengthScale":lengthScaleFactor}
 
     graphicsSettings={"cameraSpeed": cameraSpeed, "cameraSensitivity": .05, "cameraFrustumParams": [cameraPos,glm.vec3(0), [0.0,1.0,.5]]}
     #Initialize window
@@ -66,7 +78,10 @@ def main():
             currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime*timeScale))
         '''
         #currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * timeScale))
-        currentState=calcFullTimeStep(currentState,timeStep, deltaTime,timeScale)
+        if currentSettings["collisions"]:
+            currentState=calcFullTimeStep(currentState,timeStep, deltaTime,timeScale)
+        else:
+            currentState=calcFullTimeStepNoCollisions(currentState,timeStep, deltaTime,timeScale)
         #currentState=np.asarray(cc.collisionCalculator(currentState))
         engine.updatePositions(names,currentState, lengthScaleFactor)
         engine.render()
@@ -107,7 +122,7 @@ def main():
                     freeMouse = False
                     pg.mouse.set_visible(False)
                     pg.event.set_grab(True)
-            elif event.type == pg.VIDEORESIZE: #and not currentSettings['fullscreen']:
+            elif event.type == pg.VIDEORESIZE and (not currentSettings['fullscreen']):
                 screenSize=[event.w, event.h]
                 engine.updateScreenWindowed(screenSize)
 

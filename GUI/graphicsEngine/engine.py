@@ -35,17 +35,23 @@ class graphicsEngine:
             self.camera=camera([50,.01,100000],cameraParams, self.winSize, speedParams)
         #scene
         self.scene={}
+        self.decorators = []
         self.createScene(names,currentState, textures, lengthScale)
         self.skybox = cube(49999, self.camera.position, self,textureName="hipp8")
 
     def createScene(self,names, currentState, textures, lengthScale):
         for name in names:
             self.scene[name]=sphere(currentState[names[name]][-1]/lengthScale,currentState[names[name]][0:3]/lengthScale,self,textureUnit=names[name]+1, textureName=textures[names[name]])
+        saturn=self.scene["Sun"]
+        self.decorators.append(ring(saturn.radius+100.0,saturn.position, self, saturn, textureUnit=names["Sun"]+1))
+
 
     def updatePositions(self, positionNames, positionVals, lengthScaleFactor):
         for obj in positionNames:
             position=np.asarray(positionVals[positionNames[obj]][0:3])/lengthScaleFactor
             self.scene[obj].update(position)
+        for decorator in self.decorators:
+            decorator.update()
         self.skybox.update(self.camera.position)
 
     def addRegularPlanet(self, position, radius, name,lengthScale, textureIndex=0, texture="earth"):
@@ -62,6 +68,8 @@ class graphicsEngine:
         self.ctx.clear(color=(1.0,.4,.4))
         for obj in self.scene:
             self.scene[obj].render()
+        for decorator in self.decorators:
+            decorator.render()
         self.skybox.render()
         #self.menu.render()
         #self.screen.blit(self.menu.menuSurface, tuple(self.menu.position))

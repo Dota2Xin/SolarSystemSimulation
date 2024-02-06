@@ -1,0 +1,5 @@
+This is a file that contains bodies with crappy textures but it has the data incase you want them
+Enceladus 602 enceladus 108031800000000000000.0 252000.0
+Ariel 701 ariel 125100000000000000000.0 578900.0
+Umbriel 702 umbriel 1275000000000000000000.0 584700.0
+Mimas 601 mimas 37509400000000000000.0 198200.0
