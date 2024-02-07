@@ -256,8 +256,9 @@ class ring:
     context- Passes the context we're currently working with
     decorate- Rings are decorators meaning they decorate some initial object and use that to update their qualities
     '''
-    def __init__(self, radius, position, engine, decorate,textureUnit=0, textureName="earth", resolution=64):
-        self.radius=radius
+    def __init__(self, radiusInner, radiusOuter, position, engine, decorate,textureUnit=0, textureName="saturnsrings", resolution=64):
+        self.radiusInner=radiusInner
+        self.radiusOuter=radiusOuter
         self.position=position
         self.ctx=engine.ctx
         self.resolution=resolution
@@ -299,7 +300,7 @@ class ring:
     def getTexture(self, name):
         currentDir = os.path.dirname(os.path.realpath(__file__))
         texture=pg.image.load(os.path.join(currentDir,f'textures/{name}.jpg')).convert()
-        texture=pg.transform.flip(texture,flip_x=False,flip_y=True)
+        texture=pg.transform.flip(texture,flip_x=False,flip_y=False)
         texture=self.ctx.texture(size=texture.get_size(),components=3,data=pg.image.tostring(texture, "RGB"))
         return texture
 
@@ -307,56 +308,41 @@ class ring:
     #in format vertex, normal
     def getVertexArray(self):
         #sets the resolution of the spheres from a 3D standpoint
-        latitudeSegments=self.resolution
-        longitudeSegments=self.resolution
+        segments=self.resolution
 
         vertex=[]
         textureCoords=[]
 
         #do the calculation: Note: In spherical polar coordinates
-        for i in range(latitudeSegments+1):
-            if i!=0 and i!=latitudeSegments:
-                for j in range(longitudeSegments+1):
-                    theta=np.pi*i*1.0/latitudeSegments
-                    phi=2*np.pi*j*1.0/longitudeSegments
+        for i in range(segments):
+            deltaTheta=2*np.pi/segments
+            theta=i*deltaTheta
+            x=self.radiusInner*np.cos(theta)
+            y=self.radiusInner*np.sin(theta)
+            vertex.append([x,y,0])
+            textureCoords.append([0.0, 0.0])
 
-                    xNorm=np.sin(theta)*np.cos(phi)
-                    yNorm=np.sin(theta)*np.sin(phi)
-                    zNorm=np.cos(theta)
-
-                    x=xNorm*self.radius
-                    y = yNorm * self.radius
-                    z = zNorm * self.radius
-
-                    vertex.append([x,y,z])
-                    textureCoords.append([j*1.0/longitudeSegments, i*1.0/latitudeSegments])
-            else:
-                theta = np.pi * i * 1.0 / latitudeSegments
-                z=np.cos(theta)*self.radius
-                vertex.append([0,0,z])
-                textureCoords.append([0,i*1.0/latitudeSegments])
+            x = self.radiusOuter * np.cos(theta)
+            y = self.radiusOuter * np.sin(theta)
+            vertex.append([x, y, 0])
+            textureCoords.append([1.0, 0.0])
 
         indices=[]
 
-        for i in range(latitudeSegments):
-            if i!=0 and i!=latitudeSegments-1:
-                zeroIndex=(i-1)*latitudeSegments+1
-                for j in range(longitudeSegments):
-                    triangle1=(zeroIndex+j,zeroIndex+j+latitudeSegments,zeroIndex+(j+1)%longitudeSegments)
-                    triangle2=(zeroIndex+j+latitudeSegments,zeroIndex+latitudeSegments+(j+1)%longitudeSegments,zeroIndex+(j+1)%longitudeSegments)
-                    indices.append(triangle1)
-                    indices.append(triangle2)
-            else:
-                if i==0:
-                    for j in range(latitudeSegments):
-                        triangle=(0,1+j,1+(j+1)%longitudeSegments)
-                        indices.append(triangle)
+        for i in range(2*segments):
+            if i!=2*segments-1 and i!=2*segments-2:
+                if i%2==0:
+                    triangle=(i,i+1,i+2)
                 else:
-                    zeroIndex = (i - 1) * latitudeSegments + 1
-                    for j in range(latitudeSegments):
-                        triangle=(zeroIndex+j,zeroIndex+(j+1)%longitudeSegments,len(vertex)-1)
-                        indices.append(triangle)
-
+                    triangle=(i,i+2,i+1)
+                indices.append(triangle)
+            else:
+                if i==2*segments-1:
+                    triangle=(i,1,0)
+                    indices.append(triangle)
+                else:
+                    triangle=(i,i+1,0)
+                    indices.append(triangle)
         return self.getData(vertex,textureCoords, indices)
 
 

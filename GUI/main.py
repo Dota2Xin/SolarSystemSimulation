@@ -52,7 +52,7 @@ def main():
     radiusScaleFactor=0
     cameraPos=[currentState[0][0]/lengthScaleFactor,currentState[0][1]/lengthScaleFactor,currentState[0][2]/lengthScaleFactor]
 
-    cameraSpeed=100.0
+    cameraSpeed=10.0
 
     currentSettings = {"fullscreen": False, "cameraSpeed": cameraSpeed, "simSpeed": timeScale, "collisions": True, "currentPos":cameraPos, "lengthScale":lengthScaleFactor}
 
@@ -90,6 +90,9 @@ def main():
         for event in pg.event.get():
             if event.type==pg.QUIT:
                 run=False
+            elif event.type == pg.ACTIVEEVENT:
+                if event.gain == 1:
+                    pg.mouse.set_pos((engine.winSize[0]/2.0, engine.winSize[1]/2.0))
             elif event.type==pg.KEYUP:
                 if event.key==pg.K_ESCAPE:
                     run=False
@@ -119,9 +122,9 @@ def main():
                     graphicsSettings["cameraFrustumParams"]=[currentSettings["currentPos"], glm.vec3(0), [0.0, 1.0, .5]]
                     #RESET CAMERA TO HAVE RIGHT SETTINGS
                     engine=graphicsEngine(graphicsSettings,names,currentState,textures,lengthScaleFactor, cameraExtras=cameraExtras, fullscreen=currentSettings["fullscreen"])
-                    freeMouse = False
-                    pg.mouse.set_visible(False)
                     pg.event.set_grab(True)
+                    pg.mouse.set_visible(False)
+                    freeMouse = False
             elif event.type == pg.VIDEORESIZE and (not currentSettings['fullscreen']):
                 screenSize=[event.w, event.h]
                 engine.updateScreenWindowed(screenSize)

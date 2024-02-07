@@ -42,8 +42,8 @@ class graphicsEngine:
     def createScene(self,names, currentState, textures, lengthScale):
         for name in names:
             self.scene[name]=sphere(currentState[names[name]][-1]/lengthScale,currentState[names[name]][0:3]/lengthScale,self,textureUnit=names[name]+1, textureName=textures[names[name]])
-        saturn=self.scene["Sun"]
-        self.decorators.append(ring(saturn.radius+100.0,saturn.position, self, saturn, textureUnit=names["Sun"]+1))
+        saturn=self.scene["Saturn"]
+        self.decorators.append(ring(saturn.radius+5.0,saturn.radius+10.0,saturn.position, self, saturn, textureUnit=names["Saturn"]+100))
 
 
     def updatePositions(self, positionNames, positionVals, lengthScaleFactor):

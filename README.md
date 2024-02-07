@@ -37,7 +37,7 @@ We also have collisions included in the simulation. For this we just assume that
 3. Making the program an executable of some sort.
 
 <h3>Notes and Resources</h3>
-Planet textures are from NASA as is the background image of space and the data of the planets. The 3D graphics engine was made using a combination of PyGLM, modernGL, and PyGame. Numpy and Numba are both used in performing and speeding up calculations. Feel free to use this for whatever, especially anything physics educational (I have no idea how to add one of those license things and it seems boring to learn right now...). 
+Planet textures are from NASA as is the background image of space and the data of the planets, the exception for this is Saturn's rings whose texture was obtained from Bjorn Jonssons's page (http://bjj.mmedia.is/data/s_rings/index.html). The 3D graphics engine was made using a combination of PyGLM, modernGL, and PyGame. Numpy and Numba are both used in performing and speeding up calculations. Feel free to use this for whatever, especially anything physics educational (I have no idea how to add one of those license things and it seems boring to learn right now...). 
 
 
 Author: Gabriel Kumar
