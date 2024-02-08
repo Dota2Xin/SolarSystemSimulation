@@ -196,6 +196,7 @@ def addEntity(menu):
                 newState = [newPosition[0], newPosition[1], newPosition[2], newVelocities[0], newVelocities[1],
                             newVelocities[2], mass, radius]
                 menu.currentState=np.concatenate((menu.currentState,np.asarray([newState])),axis=0)
+                menu.omegas.append(0)
                 menu.names[name]=len(menu.currentState)-1
                 menu.textures.append(texture)
                 switches=menu.entityMenus[0].switches

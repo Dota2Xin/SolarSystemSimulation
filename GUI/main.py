@@ -40,16 +40,8 @@ def main():
     #Params
     timeScale=5000.0 #describes the correspondence between real time and sim time
     #Initialize this to solar system
-    #describes the current state numerically
-    currentState=np.asarray([[-1.0,0.0,0.0,.0000913393398,.0001582044,0.0,1000,.5],[1.0,0.0,0.0,.0000913393398,-.0001582044,0.0,1000,.5], [0.0,-1.732,0.0,-.00018267868,0.0,0.0,1000,.5]])
-    names = {"Sphere1": 0, "Sphere2":1, "Sphere3":2}
-    textures=["earth", "moon", "mars"]
-    currentState, names, textures= solarSystemData.getSolarSystemData()
-    #print(currentState)
-    #Dictionary that contains the full state of the solar system, references to physical data, as well as graphics data
-    mathematicalPositions=[]
+    currentState, names, textures, omegas= solarSystemData.getSolarSystemData()
     lengthScaleFactor=100000000
-    radiusScaleFactor=0
     cameraPos=[currentState[0][0]/lengthScaleFactor,currentState[0][1]/lengthScaleFactor,currentState[0][2]/lengthScaleFactor]
 
     cameraSpeed=10.0
@@ -58,7 +50,7 @@ def main():
 
     graphicsSettings={"cameraSpeed": cameraSpeed, "cameraSensitivity": .05, "cameraFrustumParams": [cameraPos,glm.vec3(0), [0.0,1.0,.5]]}
     #Initialize window
-    engine=graphicsEngine(graphicsSettings,names, currentState, textures,lengthScaleFactor, fullscreen=currentSettings['fullscreen'])
+    engine=graphicsEngine(graphicsSettings,names, currentState, textures,lengthScaleFactor,omegas , fullscreen=currentSettings['fullscreen'])
     deltaTime=engine.clock.tick(60)*.001
     pg.event.set_grab(True)
     pg.mouse.set_visible(False)
@@ -67,26 +59,20 @@ def main():
     objCount=len(currentState)
     while run:
         timeStep=timeScale
-        '''
-        Some logic for when timescales become more important
-        if timeScale>=10000:
-            while timeStep>10000:
-                currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * 10000))
-                timeStep=timeStep-10000
-            currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * timeStep))
-        else:
-            currentState=np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime*timeScale))
-        '''
-        #currentState = np.asarray(lf.dkdLeapfrogStep(currentState, deltaTime * timeScale))
+
+        #UPDATE STATE OF ALL OBJECTS IN SIMULATION
         if currentSettings["collisions"]:
             currentState=calcFullTimeStep(currentState,timeStep, deltaTime,timeScale)
         else:
             currentState=calcFullTimeStepNoCollisions(currentState,timeStep, deltaTime,timeScale)
-        #currentState=np.asarray(cc.collisionCalculator(currentState))
-        engine.updatePositions(names,currentState, lengthScaleFactor)
+        engine.updatePositions(names,currentState, lengthScaleFactor, deltaTime*timeScale)
+
+        #RENDER GRAPHICS AND UPDATE TIMES
         engine.render()
         engine.camera.update(deltaTime)
         deltaTime=engine.clock.tick(60)*.001
+
+        #PROCESS EVENTS
         for event in pg.event.get():
             if event.type==pg.QUIT:
                 run=False
@@ -116,12 +102,12 @@ def main():
                     currentSettings["currentPos"]=engine.camera.position
                     cameraExtras=[engine.camera.pitch, engine.camera.yaw, engine.camera.forward, engine.camera.up, engine.camera.right]
                     engine.destroy()
-                    tempMenu = menu(engine.winSize, currentSettings,currentState,names, textures, currentSettings['fullscreen'])
-                    currentState, names, textures, currentSettings=tempMenu.run()
+                    tempMenu = menu(engine.winSize, currentSettings,currentState,names, textures, currentSettings['fullscreen'], omegas)
+                    currentState, names, textures, currentSettings, omegas=tempMenu.run()
                     timeScale=currentSettings["simSpeed"]
                     graphicsSettings["cameraFrustumParams"]=[currentSettings["currentPos"], glm.vec3(0), [0.0, 1.0, .5]]
                     #RESET CAMERA TO HAVE RIGHT SETTINGS
-                    engine=graphicsEngine(graphicsSettings,names,currentState,textures,lengthScaleFactor, cameraExtras=cameraExtras, fullscreen=currentSettings["fullscreen"])
+                    engine=graphicsEngine(graphicsSettings,names,currentState,textures,lengthScaleFactor, omegas, cameraExtras=cameraExtras, fullscreen=currentSettings["fullscreen"])
                     pg.event.set_grab(True)
                     pg.mouse.set_visible(False)
                     freeMouse = False

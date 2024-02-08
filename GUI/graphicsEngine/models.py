@@ -16,8 +16,9 @@ class sphere:
     Name- String corresponding to name of sphere
     context- Passes the context we're currently working with
     '''
-    def __init__(self, radius, position, engine,textureUnit=0, textureName="earth", resolution=64):
+    def __init__(self, radius, position, engine,omega=0,textureUnit=0, textureName="earth", resolution=64):
         self.radius=radius
+        self.omega=omega
         self.position=position
         self.ctx=engine.ctx
         self.resolution=resolution
@@ -39,9 +40,10 @@ class sphere:
         self.shaderProgram['m_model'].write(self.modelMatrix)
 
 
-    def update(self, position):
+    def update(self, position, deltaT):
         self.position=position
         self.modelMatrix= glm.mat4(1,0,0,0, 0,1,0,0, 0,0,1,0, position[0],position[1],position[2],1)
+        self.modelMatrix=glm.rotate(self.modelMatrix, self.omega*deltaT, glm.vec3(0,0,1))
         self.shaderProgram['m_model'].write(self.modelMatrix)
         self.shaderProgram['m_proj'].write(self.engine.camera.projMatrix)
         self.shaderProgram['m_view'].write(self.engine.camera.viewMatrix)

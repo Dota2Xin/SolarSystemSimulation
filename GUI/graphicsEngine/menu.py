@@ -7,13 +7,13 @@ from GUI.graphicsEngine.menuHelpers import *
 
 class menu:
 
-    def __init__(self, winSize, simulationParams, currentState, names, textures, fullscreen):
+    def __init__(self, winSize, simulationParams, currentState, names, textures, fullscreen, omegas):
         self.state=0 #describes state of menu, 0= Menu is off, 1=general graphics/app options,
                      # 2=simulation options, 3=Menu for adding entity, 4=Menu for viewing, editing, and taking away entities
 
         self.height = winSize[1]
         self.width = winSize[0]
-
+        self.omegas=omegas
         self.color=[50, 230, 230]
         if fullscreen:
             self.screen = pg.display.set_mode(winSize, flags=pg.DOUBLEBUF | pg.FULLSCREEN)
@@ -268,7 +268,7 @@ class menu:
                 elif event.type==pg.MOUSEBUTTONUP:
                     self.controlMouseButtonUp(event)
 
-        return self.currentState, self.names, self.textures, self.simulationParams
+        return self.currentState, self.names, self.textures, self.simulationParams, self.omegas
 
 
 

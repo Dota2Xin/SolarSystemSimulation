@@ -7,7 +7,7 @@ from .camera import *
 from .menu import *
 
 class graphicsEngine:
-    def __init__(self,graphicsSettings,names, currentState, textures,lengthScale, winSize=[1300,700], cameraExtras=[], fullscreen=False):
+    def __init__(self,graphicsSettings,names, currentState, textures,lengthScale, omegas, winSize=[1300,700], cameraExtras=[], fullscreen=False):
         pg.init()
         self.winSize=winSize
         #tell pg what openGL to use
@@ -36,20 +36,21 @@ class graphicsEngine:
         #scene
         self.scene={}
         self.decorators = []
+        self.omegas=omegas
         self.createScene(names,currentState, textures, lengthScale)
         self.skybox = cube(49999, self.camera.position, self,textureName="hipp8")
 
     def createScene(self,names, currentState, textures, lengthScale):
         for name in names:
-            self.scene[name]=sphere(currentState[names[name]][-1]/lengthScale,currentState[names[name]][0:3]/lengthScale,self,textureUnit=names[name]+1, textureName=textures[names[name]])
+            self.scene[name]=sphere(currentState[names[name]][-1]/lengthScale,currentState[names[name]][0:3]/lengthScale,self,textureUnit=names[name]+1, textureName=textures[names[name]], omega=self.omegas[names[name]])
         saturn=self.scene["Saturn"]
         self.decorators.append(ring(saturn.radius+5.0,saturn.radius+10.0,saturn.position, self, saturn, textureUnit=names["Saturn"]+100))
 
 
-    def updatePositions(self, positionNames, positionVals, lengthScaleFactor):
+    def updatePositions(self, positionNames, positionVals, lengthScaleFactor, deltaTime):
         for obj in positionNames:
             position=np.asarray(positionVals[positionNames[obj]][0:3])/lengthScaleFactor
-            self.scene[obj].update(position)
+            self.scene[obj].update(position, deltaTime)
         for decorator in self.decorators:
             decorator.update()
         self.skybox.update(self.camera.position)
