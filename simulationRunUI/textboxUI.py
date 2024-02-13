@@ -1,7 +1,7 @@
 import pygame as pg
 import numpy as np
-from GUI.graphicsEngine.button import *
-from GUI.graphicsEngine.buttonFunctions import *
+from buttonFunctionsUI import *
+from buttonUI import *
 
 class textbox:
 

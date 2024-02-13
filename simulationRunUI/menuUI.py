@@ -5,6 +5,7 @@ from dropdownUI import *
 from entityMenuBoxUI import *
 from textboxUI import *
 import pygame as pg
+from menuHelpersUI import *
 
 
 class menu:
@@ -15,6 +16,7 @@ class menu:
 
         self.height = winSize[1]
         self.width = winSize[0]
+        self.simRunning=False
         self.color=[50, 230, 230]
         if fullscreen:
             self.screen = pg.display.set_mode(winSize, flags=pg.DOUBLEBUF | pg.FULLSCREEN)
@@ -24,8 +26,10 @@ class menu:
         #self.menuSurface = pg.Surface((int(self.width), int(self.height)))
         #Play with the scaling options
         #Store sim data
-        self.currentState=np.asarray([])
-        self.names=[]
+        self.currentState=[]
+        self.names={}
+        self.finalTime=0
+        self.steps=0
 
         self.currentEntityInfo=[]
         # position of top left of menu
@@ -41,6 +45,10 @@ class menu:
         self.dropDowns=[]
         self.textboxes=[]
         self.running=True
+
+        self.simStartState=[]
+        self.simFinalTime=0
+        self.simSteps=0
         self.onInit()
 
     #this function will initialize all the objects we need and then the different states will just change the ones we render
@@ -119,7 +127,7 @@ class menu:
 
         self.currentEntityMenus.append(self.entityMenus[0])
 
-        buttonNames={"leaveButtonEntity":1, "mainButton":1, "teleportButton":1, "addButton":1, "editButton":1}
+        buttonNames={"leaveButtonEntity":1, "runButton":1, "outputButton":1, "addButton":1, "editButton":1, "inputFileButton":1}
 
         for button in self.buttons:
             if button.name in buttonNames:
@@ -127,11 +135,16 @@ class menu:
 
         textboxNames = {"positionLabel": 1, "positionValues": 1, "massLabel": 1, "massValues": 1,
                         "velocityLabel": 1, "velocityValues": 1, "radiusValues": 1, "radiusLabel": 1,
-                        "textureLabel":1, "textureValues":1, "nameLabel":1, "nameValues":1, "addLabel":1}
+                        "timeLabel":1, "timeValues":1, "stepsLabel":1, "stepsValues":1, "addLabel":1}
 
         for textbox in self.textboxes:
             if textbox.name in textboxNames:
                 self.currentTextboxes.append(textbox)
+
+        dropdownNames={"inputDropdown":1}
+        for dropdown in self.dropDowns:
+            if dropdown.name in dropdownNames:
+                self.currentDropdowns.append(dropdown)
         pass
 
     @staticmethod
@@ -251,6 +264,8 @@ class menu:
     def run(self):
         self.running=True
         while self.running:
+            if self.simRunning:
+                pass
             self.render()
             for event in pg.event.get():
                 if event.type == pg.QUIT:

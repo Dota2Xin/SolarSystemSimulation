@@ -1,7 +1,7 @@
 import pygame as pg
 import numpy as np
-from GUI.graphicsEngine.button import *
-from GUI.graphicsEngine.buttonFunctions import *
+from buttonFunctionsUI import *
+from buttonUI import *
 
 class dropdown:
 
@@ -30,10 +30,8 @@ class dropdown:
         #State settings
         self.pressed=False
         self.on=False
-        print(self.options)
         self.buttons=self.createButtons()
         self.currentButtons=[]
-        print(self.buttons)
         #self.hover=False
 
     def createButtons(self):
@@ -61,11 +59,9 @@ class dropdown:
         self.color = [self.color[0] * 1.5, self.color[1] * 1.5, self.color[2] * 1.5]
         if self.on:
             self.on=False
-            print("THIS WAY")
             self.currentButtons=[]
         else:
             self.on=True
-            print("OR THAT WAY")
             self.currentButtons=self.buttons[0:]
 
 
