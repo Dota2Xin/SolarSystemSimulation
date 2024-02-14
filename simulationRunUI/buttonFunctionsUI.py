@@ -1,5 +1,6 @@
 import numpy as np
 from switchUI import *
+from tkinter import Tk, filedialog
 
 
 def changeColor(menu):
@@ -196,19 +197,85 @@ def addEntity(menu):
         pass
 
 def outputDirFunc(menu):
-    pass
+    try:
+        root = Tk()
+        root.withdraw()
+        inputPath = filedialog.askdirectory()
+        root.destroy()
+        menu.outputPath = inputPath
+        name = inputPath.split("/")[-1]
+        if len(name) > 18:
+            name = name[0:18] + ".."
+        for textbox in menu.textboxes:
+            if textbox.name == "outputLabel":
+                textbox.text = "Output Dir:" + name
+    except:
+        return
 
 def setInputFile(menu):
-    pass
+    try:
+        root=Tk()
+        root.withdraw()
+        inputPath=filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+        root.destroy()
+        menu.inputPath=inputPath
+        name=inputPath.split("/")[-1]
+        if len(name)>18:
+            name=name[0:18]+".."
+        for textbox in menu.textboxes:
+            if textbox.name=="inputLabel":
+                textbox.text="Input File:"+name
+    except:
+        return
+
+def parseInputFile(inputPath):
+    initialStates=[]
+    try:
+        with open(inputPath, "r") as f:
+            for line in f:
+                currentLine=line.strip()
+                stringValues=currentLine.split(" ")
+                posX=float(stringValues[0])
+                posY=float(stringValues[1])
+                posZ=float(stringValues[2])
+                velX=float(stringValues[3])
+                velY=float(stringValues[4])
+                velZ=float(stringValues[5])
+                m=float(stringValues[6])
+                R=float(stringValues[7])
+                initialStates.append(np.asarray([posX, posY, posZ, velX, velY, velZ, m, R]))
+        initialStates=np.asarray(initialStates)
+        #print(initialStates)
+        return initialStates
+    except:
+        print("Invalid Input File")
+        return None
+
 
 def runSim(menu):
+    finalTime=0
+    finalSteps=0
+    for textbox in menu.textboxes:
+        if textbox.name=="stepsValues":
+            try:
+                finalSteps=int(textbox.text)
+            except:
+                print("ERROR: Need integer steps")
+        elif textbox.name=="timeValues":
+            try:
+                finalTime=float(textbox.text)
+            except:
+                print("ERROR: Need float final time")
     for dropdown in menu.currentDropdowns:
         if dropdown.name=="inputDropdown":
-
-            return
-    else:
-        menu.simStartState=np.asarray(menu.currentState)
-        menu.simFinalTime=menu.simFinalTime
-        menu.simSteps=menu.steps
-        menu.simRunning=True
-        return
+            if dropdown.currentText=="Use Input":
+                menu.simStartState=np.asarray(parseInputFile(menu.inputPath))
+                menu.simFinalTime=finalTime
+                menu.simSteps=finalSteps
+                menu.simRunning=True
+                return
+    menu.simStartState=np.asarray(menu.currentState)
+    menu.simFinalTime = finalTime
+    menu.simSteps = finalSteps
+    menu.simRunning=True
+    return

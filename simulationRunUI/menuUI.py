@@ -5,6 +5,7 @@ from dropdownUI import *
 from entityMenuBoxUI import *
 from textboxUI import *
 import pygame as pg
+import os
 from menuHelpersUI import *
 
 
@@ -24,13 +25,14 @@ class menu:
             self.screen=pg.display.set_mode(winSize, flags= pg.DOUBLEBUF | pg.RESIZABLE)
         self.typing=False
         #self.menuSurface = pg.Surface((int(self.width), int(self.height)))
-        #Play with the scaling options
+        #Store file info
+        self.inputPath=""
+        self.outputPath=""
         #Store sim data
         self.currentState=[]
         self.names={}
         self.finalTime=0
         self.steps=0
-
         self.currentEntityInfo=[]
         # position of top left of menu
         #self.position = [winSize[0]-self.width*1.1, winSize[1]-self.height*1.1]
@@ -135,7 +137,7 @@ class menu:
 
         textboxNames = {"positionLabel": 1, "positionValues": 1, "massLabel": 1, "massValues": 1,
                         "velocityLabel": 1, "velocityValues": 1, "radiusValues": 1, "radiusLabel": 1,
-                        "timeLabel":1, "timeValues":1, "stepsLabel":1, "stepsValues":1, "addLabel":1}
+                        "timeLabel":1, "timeValues":1, "stepsLabel":1, "stepsValues":1, "addLabel":1, "inputLabel":1, "outputLabel":1}
 
         for textbox in self.textboxes:
             if textbox.name in textboxNames:
@@ -265,7 +267,17 @@ class menu:
         self.running=True
         while self.running:
             if self.simRunning:
-                pass
+                if self.outputPath=="":
+                    self.outputPath=os.getcwd()
+                print("SIMULATION RUN STARTED")
+                for button in self.buttons:
+                    if button.name=="runButton":
+                        button.text="Running Sim"
+                storeStates=runSimulation(self)
+                print("SIMULATION RUN FINISHED")
+                storeSimData(storeStates, self.outputPath)
+                print("SIMULATION DATA WRITING FINISHED")
+                self.simRunning=False
             self.render()
             for event in pg.event.get():
                 if event.type == pg.QUIT:

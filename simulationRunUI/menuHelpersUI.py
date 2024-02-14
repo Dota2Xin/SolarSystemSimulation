@@ -4,6 +4,9 @@ from buttonFunctionsUI import *
 from dropdownUI import *
 from entityMenuBoxUI import *
 from textboxUI import *
+from src.numerics.collisionCalculator import collisionCalculator
+from src.numerics.dkdLeapfrogIntegrator import dkdLeapfrogStep
+from datetime import datetime
 
 #creates the buttons and textboxes and stuff for the main menu
 def createMainMenu(menu):
@@ -197,7 +200,17 @@ def createEntityMenu(menu):
                              "inputFileButton", borderThickness=2)
 
     #dropdown menu
-    inputDropdown=dropdown(buttonColor, (graphicsLabelX+spacing+elementWidth*.75+menu.width*.07, graphicsLabelY + 6.5 * spacingY), (labelHeight,elementWidth*.75), menu, ["Use Input", "Don't Use Input"], "inputDropdown")
+    inputDropdown=dropdown(buttonColor, (graphicsLabelX+spacing+elementWidth*.75+menu.width*.07, graphicsLabelY + 6.5 * spacingY), (labelHeight,elementWidth*.75), menu, ["Don't Use Input","Use Input"], "inputDropdown")
+
+    inputLabelBox = textbox(menu.color, (graphicsLabelX+menu.width*.07, graphicsLabelY + 7.5 * spacingY),
+                            (labelHeight, labelWidth), menu,
+                            "inputLabel", mutable=False, borderThickness=0, )
+    inputLabelBox.text = "Input File: None"
+
+    outputLabelBox = textbox(menu.color, (graphicsLabelX+spacing+elementWidth*.75+menu.width*.07, graphicsLabelY + 7.5 * spacingY),
+                            (labelHeight, labelWidth), menu,
+                            "outputLabel", mutable=False, borderThickness=0, )
+    outputLabelBox.text = "Output Dir: Current"
 
     menu.buttons.append(inputFileButton)
     menu.dropDowns.append(inputDropdown)
@@ -214,4 +227,28 @@ def createEntityMenu(menu):
     menu.textboxes.append(addLabelBox)
     menu.textboxes.append(stepsLabelBox)
     menu.textboxes.append(stepsValueBox)
+    menu.textboxes.append(outputLabelBox)
+    menu.textboxes.append(inputLabelBox)
     pass
+
+def runSimulation(menu):
+    storeStates=[]
+    storeStates.append(menu.simStartState)
+    timeStep=menu.simFinalTime*1.0/menu.simSteps
+
+    for i in range(menu.simSteps):
+        newState=dkdLeapfrogStep(storeStates[-1], timeStep)
+        newState=collisionCalculator(newState)
+        storeStates.append(newState)
+    return storeStates
+
+def storeSimData(storeStates, outputDir):
+    current = datetime.now()
+    fileName= current.strftime("N_body_sim_date_%d_%m_%Y_time_%H_%M_%S")+".txt"
+    filePath=f"{outputDir}/{fileName}"
+    with open(filePath, "w") as f:
+        for i in range(len(storeStates)):
+            f.write(str(storeStates[i])+"\n")
+        f.close()
+
+
