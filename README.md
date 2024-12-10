@@ -1,6 +1,8 @@
 #Solar System Simulator
 <h1>Description</h1>
-This project contains code that simulates the solar system by solving the N-body problem with elastic collisions. It takes in real data from NASA as initial conditions (scaling radii up by 10) and lets the user explore the solar system as well as play with whatever features they want such as changing the simulation speed, changing collisions, adding objects, editing objects, etc.... 
+This project contains code that simulates the solar system by solving the N-body problem with elastic collisions. It takes in real data from NASA as initial conditions (scaling radii up by 10) and lets the user explore the solar system as well as play with whatever features they want such as changing the simulation speed, changing collisions, adding objects, editing objects, etc....
+
+Here's an example video of my showing some of it off: https://www.youtube.com/watch?v=L_DjsZYeG1E 
 
 <h3>Controls and Options</h3>
 To control yourself you can use WASD to move left right forwards and backwards and then lshift and space to move down and up respectively. Pressing the "R" key will speed up your movement by a factor of 10. You can press I to instantly insert a small body in front of you. More importantly you can access the menu with M. In the menu you can change the speed the simulation runs at (although it will lag if you set it too fast). You can also change how fast you move in the simulation. 
